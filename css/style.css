@@ -1,0 +1,242 @@
+.export-button {
+    border: 0px;
+    background: transparent;
+}
+
+.button-group {
+    display: inline-flex;
+    position: relative;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    border-radius: 6px;
+    overflow: visible; 
+}
+
+.button-group button {
+    border: 1px solid #d1d5db;
+    background: #ffffff;
+    color: #374151;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    outline: none;
+}
+
+.button-group button:hover {
+    background: #f9fafb;
+    border-color: #c1c5cb;
+    color: #111827;
+}
+
+.button-group button:active {
+    background: #f3f4f6;
+    transform: translateY(1px);
+}
+
+.my-button {
+    padding: 8px 16px;
+    border-top-left-radius: 6px;
+    border-bottom-left-radius: 6px;
+}
+
+.dropdown-toggle {
+    padding: 8px 10px;
+    border-left: none !important;
+    border-top-right-radius: 6px;
+    border-bottom-right-radius: 6px;
+    display: flex;
+    align-items: center;
+}
+
+.arrow {
+    font-size: 10px;
+    transition: transform 0.2s ease;
+}
+
+.show-arrow .arrow {
+    transform: rotate(180deg);
+}
+
+.dropdown-menu {
+    position: absolute;
+    bottom: calc(100% + 5px); 
+    right: 0;
+    
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 6px;
+    padding: 4px;
+    margin: 0;
+    list-style: none;
+    
+    box-shadow: 0 -10px 15px -3px rgba(0, 0, 0, 0.1), 0 -4px 6px -2px rgba(0, 0, 0, 0.05);
+    
+    z-index: 1000;
+    min-width: 140px;
+    
+    opacity: 0;
+    transform: translateY(10px); 
+    pointer-events: none;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.dropdown-menu.show {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+}
+
+.dropdown-menu li {
+    padding: 8px 12px;
+    border-radius: 4px;
+    font-size: 13px;
+    color: #4b5563;
+    display: flex;
+    align-items: center;
+    transition: background 0.1s;
+}
+
+.dropdown-menu li:hover {
+    background-color: #f3f4f6;
+    color: #111827;
+}
+
+.dropdown-menu li::before {
+    content: '•';
+    margin-right: 2px;
+    color: #9ca3af;
+}
+
+.button-container {
+    display: inline-block;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+.single-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 16px;
+    
+    background: #ffffff;
+    color: #374151;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    outline: none;
+}
+
+.single-button:hover {
+    background: #f9fafb;
+    border-color: #c1c5cb;
+    color: #111827;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.single-button:active {
+    background: #f3f4f6;
+    transform: translateY(1px);
+    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+}
+
+.custom-toast {
+    position: fixed;
+    bottom: 150px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 12px 24px;
+    border-radius: 24px;
+    font-size: 14px;
+    z-index: 9999;
+    opacity: 0;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    pointer-events: none;
+    white-space: nowrap;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.custom-toast.show {
+    opacity: 1;
+    transform: translate(-50%, -10px);
+}
+
+.model-label-tag {
+    display: block;
+    margin-bottom: 8px;
+    width: 100%;
+    text-align: right;
+}
+
+.model-label-left{
+    text-align: left;
+}
+.custom-checkbox-container {
+    display: inline-flex;
+    align-items: center;
+    cursor: pointer;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-size: 14px;
+    color: #374151;
+    user-select: none;
+    margin: 5px 0;
+}
+
+.hidden-checkpoint {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+}
+
+.checkmark {
+    height: 18px;
+    width: 18px;
+    background-color: #ffffff;
+    border: 1px solid #d1d5db;
+    border-radius: 4px;
+    margin-right: 10px;
+    position: relative;
+    transition: all 0.2s ease;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+}
+
+.custom-checkbox-container:hover .checkmark {
+    border-color: #c1c5cb;
+    background-color: #f9fafb;
+}
+
+.hidden-checkpoint:checked ~ .checkmark {
+    background-color: #374151;
+    border-color: #374151;
+}
+
+.checkmark:after {
+    content: "";
+    position: absolute;
+    display: none;
+    left: 6px;
+    top: 2px;
+    width: 4px;
+    height: 9px;
+    border: solid white;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+}
+
+.hidden-checkpoint:checked ~ .checkmark:after {
+    display: block;
+}
+
+.hidden-checkpoint:focus-visible ~ .checkmark {
+    outline: 2px solid #9ca3af;
+    outline-offset: 2px;
+}

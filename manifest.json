@@ -1,0 +1,32 @@
+{
+    "name": "AI Chat Exporter",
+    "description": "A lightweight browser extension to export Gemini conversations to Markdown or Text.",
+    "version": "1.0.0",
+    "manifest_version": 3,
+    "icons": {
+        "128": "icon.png"
+    },
+        "permissions": [
+        "clipboardRead"
+    ],
+    "content_scripts": [
+        {
+            "matches": ["https://gemini.google.com/*", "http://gemini.google.com/*"],
+            "js": [
+                "i18n.js",
+                "utils.js",
+                "actions/checkactions.js",
+                "actions/copyactions.js",
+                "buttoncreator.js",
+                "content.js"
+            ],
+            "css": [
+                "css/style.css"
+            ],
+            "run_at": "document_start"
+        }
+    ],
+    "action": {
+        "default_title": "AI Chat Exporter"
+    }
+}
