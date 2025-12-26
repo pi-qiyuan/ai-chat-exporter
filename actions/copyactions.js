@@ -40,6 +40,9 @@
         const selectedCheckboxes = document.querySelectorAll('.model-selector:checked');
         if (selectedCheckboxes.length === 0) {
             Utils.showToast(i18n.t("noSelection"));
+            inSelectMode = true;
+            CheckActions.manageUserQueryCheckboxes();
+            CheckActions.manageContainerCheckboxes();
             return;
         }
 
@@ -128,6 +131,7 @@
                 Utils.downloadText(finalMarkdown, getFilename() + ".md");
             }
         } catch (error) {
+            Utils.showToast("Error during markdown export.");
         } finally {
             if (typeof SnackbarManager !== 'undefined') SnackbarManager.enableNotifications(3000);
         }

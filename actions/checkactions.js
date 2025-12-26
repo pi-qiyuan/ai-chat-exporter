@@ -1,27 +1,31 @@
 (function(global){
     const CheckActions = {
         manageUserQueryCheckboxes: () => {
-            manageUserQueryCheckboxes();
+            manageCheckboxes('user-query', 'model-label-tag', (item, label) => item.before(label));
         },
 
         manageContainerCheckboxes: () => {
-            manageContainerCheckboxes();
+            manageCheckboxes('message-content', 'model-label-tag model-label-left', (item, label) => item.prepend(label));
         }
     };
 
-    function manageUserQueryCheckboxes() {
-        const userQueryElements = document.querySelectorAll('user-query');
-        if (userQueryElements.length === 0) {
+    function manageCheckboxes(selector, labelClass, insertionLogic) {
+        const elements = document.querySelectorAll(selector);
+        if (elements.length === 0) {
             return;
         }
 
-        userQueryElements.forEach((item, index) => {
-            if (item.previousElementSibling && item.previousElementSibling.classList.contains('model-label-tag')) {
+        elements.forEach(item => {
+            const alreadyExists = selector === 'user-query' 
+                ? (item.previousElementSibling && item.previousElementSibling.classList.contains('model-label-tag'))
+                : item.querySelector('.model-label-tag');
+
+            if (alreadyExists) {
                 return;
             }
 
             const label = document.createElement('label');
-            label.className = 'model-label-tag';
+            label.className = labelClass;
 
             label.innerHTML = `
                 <div class="custom-checkbox-container">
@@ -30,30 +34,7 @@
                     <span class="label-text">${i18n.t("exportPrompt")}</span>
                 </div>
             `;
-            item.before(label);
-        });
-    }
-
-    function manageContainerCheckboxes() {
-        const containerElements = document.querySelectorAll('message-content');
-        if (containerElements.length === 0) {
-            return;
-        }
-
-        containerElements.forEach((item, index) => {
-            if (item.querySelector('.model-label-tag')) return;
-
-            const label = document.createElement('label');
-            label.className = 'model-label-tag model-label-left';
-
-            label.innerHTML = `
-                <div class="custom-checkbox-container">
-                    <input type="checkbox" class="hidden-checkpoint model-selector">
-                    <span class="checkmark"></span>
-                    <span class="label-text">${i18n.t("exportPrompt")}</span>
-                </div>
-            `;
-            item.prepend(label);
+            insertionLogic(item, label);
         });
     }
 

@@ -11,14 +11,17 @@ const i18n = {
     },
 
     zh: {
-        selectBtn: "选择对话", 
-        exportBtn: "导出已选内容", 
+        selectBtn: "选择对话",
+        exportBtn: "导出已选内容",
         exportAsText: "导出为 TXT",
-        exportAsMarkdown: "导出为 Markdown", 
-        noSelection: "请先勾选需要导出的内容", 
-        exportPrompt: "选中此段", 
+        exportAsMarkdown: "导出为 Markdown",
+        noSelection: "请先勾选需要导出的内容",
+        exportPrompt: "选中此段",
         userHeader: "我",
         modelHeader: "Gemini",
+        selectAll: "选择所有对话",
+        selectUser: "选择全部提问",
+        selectModel: "选择全部回答",
     },
     en: {
         selectBtn: "Select Messages",
@@ -28,7 +31,10 @@ const i18n = {
         noSelection: "Please select messages to export",
         exportPrompt: "Select this message",
         userHeader: "Me",
-        modelHeader: "Gemini"
+        modelHeader: "Gemini",
+        selectAll: "Select All Conversations",
+        selectUser: "Select All Prompts",
+        selectModel: "Select All Responses",
     },
     ja: {
         selectBtn: "メッセージを選択",
@@ -38,7 +44,10 @@ const i18n = {
         noSelection: "書き出す内容を選択してください",
         exportPrompt: "これを選択",
         userHeader: "自分",
-        modelHeader: "ジェミニ"
+        modelHeader: "ジェミニ",
+        selectAll: "すべての会話を選択",
+        selectUser: "すべての質問を選択",
+        selectModel: "すべての回答を選択",
     },
     ko: {
         selectBtn: "메시지 선택",
@@ -48,7 +57,10 @@ const i18n = {
         noSelection: "내보낼 항목을 선택해 주세요",
         exportPrompt: "항목 선택",
         userHeader: "나",
-        modelHeader: "제미나이"
+        modelHeader: "제미나이",
+        selectAll: "모든 대화 선택",
+        selectUser: "모든 질문 선택",
+        selectModel: "모든 답변 선택",
     },
     de: {
         selectBtn: "Nachrichten auswählen",
@@ -58,7 +70,10 @@ const i18n = {
         noSelection: "Bitte wählen Sie Nachrichten zum Exportieren aus",
         exportPrompt: "Diesen Teil auswählen",
         userHeader: "Ich",
-        modelHeader: "Gemini"
+        modelHeader: "Gemini",
+        selectAll: "Alle Gespräche auswählen",
+        selectUser: "Alle Fragen auswählen",
+        selectModel: "Alle Antworten auswählen",
     },
     fr: {
         selectBtn: "Sélect. messages",
@@ -68,7 +83,10 @@ const i18n = {
         noSelection: "Veuillez sélectionner des messages à exporter",
         exportPrompt: "Sélectionner ceci",
         userHeader: "Moi",
-        modelHeader: "Gemini"
+        modelHeader: "Gemini",
+        selectAll: "Toutes les conversations",
+        selectUser: "Toutes les questions",
+        selectModel: "Toutes les réponses",
     },
     es: {
         selectBtn: "Seleccionar mensajes",
@@ -78,7 +96,10 @@ const i18n = {
         noSelection: "Por favor, selecciona mensajes para exportar",
         exportPrompt: "Seleccionar esto",
         userHeader: "Yo",
-        modelHeader: "Gemini"
+        modelHeader: "Gemini",
+        selectAll: "Todas las conversaciones",
+        selectUser: "Todas las preguntas",
+        selectModel: "Todas las respuestas",
     },
 
     t(key) {

@@ -1,6 +1,8 @@
 .export-button {
     border: 0px;
     background: transparent;
+    display: inline-block;
+    margin: 0 4px;
 }
 
 .button-group {
@@ -88,13 +90,14 @@
 }
 
 .dropdown-menu li {
-    padding: 8px 12px;
+    padding: 8px 12px 8px 8px;
     border-radius: 4px;
     font-size: 13px;
     color: #4b5563;
     display: flex;
     align-items: center;
     transition: background 0.1s;
+    cursor: pointer;
 }
 
 .dropdown-menu li:hover {
@@ -104,7 +107,7 @@
 
 .dropdown-menu li::before {
     content: '•';
-    margin-right: 2px;
+    margin-right: 6px;
     color: #9ca3af;
 }
 

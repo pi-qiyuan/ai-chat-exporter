@@ -1,3 +1,7 @@
+document.addEventListener('DOMContentLoaded', () => {
+    ButtonCreator.insertExportButton(observer);
+});
+
 const observer = new MutationObserver((mutationsList, obs) => {
     ButtonCreator.insertExportButton(obs);
 });
@@ -17,9 +21,7 @@ new MutationObserver(() => {
         inSelectMode = false;
         document.querySelectorAll('.custom-checkbox-container').forEach(container => container.remove());
     }
-}).observe(document, {subtree: true, childList: true});
 
-new MutationObserver(() => {
     if (!inSelectMode) {
         return;
     }
@@ -27,6 +29,13 @@ new MutationObserver(() => {
     CheckActions.manageContainerCheckboxes();
 }).observe(document, {subtree: true, childList: true});
 
-document.addEventListener('DOMContentLoaded', () => {
-    ButtonCreator.insertExportButton(observer);
+document.addEventListener('keydown', (event) => {
+    if (event.key.toUpperCase() === 'E' && event.shiftKey && (event.ctrlKey || event.metaKey)) {
+        event.preventDefault();
+
+        const exportButton = document.getElementById('main-export-btn');
+        if (exportButton) {
+            exportButton.click();
+        }
+    }
 });
