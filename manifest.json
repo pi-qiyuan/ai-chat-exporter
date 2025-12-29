@@ -13,6 +13,7 @@
         {
             "matches": ["https://gemini.google.com/*", "http://gemini.google.com/*"],
             "js": [
+                "turndown.js",
                 "i18n.js",
                 "utils.js",
                 "actions/checkactions.js",

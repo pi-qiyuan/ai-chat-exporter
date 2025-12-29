@@ -95,35 +95,61 @@
     async function exportAsMarkdown(selectedCheckboxes) {
         if (typeof SnackbarManager !== 'undefined') SnackbarManager.disableNotifications();
 
+        const turndownService = new TurndownService({
+            headingStyle: 'atx',
+            codeBlockStyle: 'fenced'
+        });
+
+        turndownService.addRule('fencedCodeBlock', {
+            filter: function (node, options) {
+                return (
+                    options.codeBlockStyle === 'fenced' &&
+                    node.nodeName === 'PRE' &&
+                    node.querySelector('code')
+                );
+            },
+            replacement: function (_content, node, options) {
+                let language = '';
+                let parent = node.closest('code-block');
+                if (parent) {
+                    let codeDecoration = parent.querySelector('.code-block-decoration');
+                    if (codeDecoration) {
+                        language = codeDecoration.innerText;
+                    }
+                }
+
+                const codeElement = node.querySelector('code');
+                return (
+                    '\n\n' + options.fence + language + '\n' +
+                    codeElement.textContent +
+                    '\n' + options.fence + '\n\n'
+                );
+            }
+        });
+
         let finalMarkdown = "";
 
         try {
             for (const checkbox of selectedCheckboxes) {
                 const labelTag = checkbox.closest('.ace-model-label-tag');
                 let sectionHeader = "";
-                let buttonToClick = null;
+                let target = null;
 
                 const userQueryElement = labelTag.parentElement.querySelector('user-query');
                 const messageContentWrapper = labelTag.closest('message-content');
 
                 if (userQueryElement && labelTag.parentElement.contains(userQueryElement)) {
                     sectionHeader = `## ${i18n.t("userHeader")}\n`;
-                    buttonToClick = userQueryElement.parentElement.querySelector('button:has(mat-icon[fonticon="content_copy"])');
+                    target = userQueryElement.querySelector('.query-text');
                 } 
                 else if (messageContentWrapper) {
                     sectionHeader = `## ${i18n.t("modelHeader")}\n`;
-
-                    const responseContainer = labelTag.closest('response-container');
-                    if (responseContainer) {
-                        buttonToClick = responseContainer.querySelector('button:has(mat-icon[fonticon="content_copy"])');
-                    }
+                    target = checkbox.closest('message-content').querySelector('div[id^="model-response-message-content"]');
                 }
 
-                if (buttonToClick) {
-                    buttonToClick.click();
-                    await new Promise(resolve => setTimeout(resolve, 200));
-                    const clipboardText = await navigator.clipboard.readText();
-                    finalMarkdown += `${sectionHeader}${clipboardText}\n\n`;
+                if (target) {
+                    let md = turndownService.turndown(target.innerHTML)
+                    finalMarkdown += `${sectionHeader}${md}\n\n`;
                 }
             }
 
