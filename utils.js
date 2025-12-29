@@ -11,16 +11,16 @@
 
     function showToast(message, duration) {
         const toast = document.createElement('div');
-        toast.className = 'custom-toast';
+        toast.className = 'ace-custom-toast';
         toast.textContent = message;
         document.body.appendChild(toast);
 
         setTimeout(() => {
-            toast.classList.add('show');
+            toast.classList.add('ace-show');
         }, 10);
 
         setTimeout(() => {
-            toast.classList.remove('show');
+            toast.classList.remove('ace-show');
             setTimeout(() => {
                 if (toast.parentNode) {
                     toast.parentNode.removeChild(toast);

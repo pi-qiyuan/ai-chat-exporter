@@ -17,46 +17,76 @@
         }
 
         const selectButton = document.createElement('div');
-        selectButton.className = 'export-button';
+        selectButton.className = 'ace-export-button';
         selectButton.innerHTML = `
-            <div class="button-group">
-                <button id="select-action-btn" class="my-button">
+            <div class="ace-button-group">
+                <button id="select-action-btn" class="ace-my-button">
                     ${i18n.t('selectBtn')}
                 </button>
-                <button id="select-menu-toggle-btn" class="dropdown-toggle">
-                    <span class="arrow">▼</span>
+                <button id="select-menu-toggle-btn" class="ace-dropdown-toggle">
+                    <span class="ace-arrow">▼</span>
                 </button>
-                <ul id="select-menu" class="dropdown-menu">
-                    <li class="menu-item" data-action="all">${i18n.t('selectAll')}</li>
-                    <li class="menu-item" data-action="user">${i18n.t('selectUser')}</li>
-                    <li class="menu-item" data-action="model">${i18n.t('selectModel')}</li>
+                <ul id="select-menu" class="ace-dropdown-menu">
+                    <li class="ace-menu-item" data-action="all">${i18n.t('selectAll')}</li>
+                    <li class="ace-menu-item" data-action="user">${i18n.t('selectUser')}</li>
+                    <li class="ace-menu-item" data-action="model">${i18n.t('selectModel')}</li>
                 </ul>
             </div>
         `;
 
         const exportButton = document.createElement('div');
-        exportButton.className = 'export-button';
+        exportButton.className = 'ace-export-button';
         exportButton.innerHTML = `
-            <div class="button-group">
-                <button id="main-export-btn" class="my-button">
+            <div class="ace-button-group">
+                <button id="main-export-btn" class="ace-my-button">
                     ${i18n.t('exportBtn')}
                 </button>
-                <button id="menu-toggle-btn" class="dropdown-toggle">
-                    <span class="arrow">▼</span>
+                <button id="menu-toggle-btn" class="ace-dropdown-toggle">
+                    <span class="ace-arrow">▼</span>
                 </button>
                 
-                <ul id="export-menu" class="dropdown-menu">
-                    <li class="menu-item" data-format="txt">${i18n.t('exportAsText')}</li>
-                    <li class="menu-item" data-format="md">${i18n.t('exportAsMarkdown')}</li>
+                <ul id="export-menu" class="ace-dropdown-menu">
+                    <li class="ace-menu-item" data-format="txt">${i18n.t('exportAsText')}</li>
+                    <li class="ace-menu-item" data-format="md">${i18n.t('exportAsMarkdown')}</li>
+                </ul>
+            </div>
+        `;
+
+        const moreButton = document.createElement('div');
+        moreButton.className = 'ace-export-button';
+        moreButton.innerHTML = `
+            <div class="ace-button-group">
+                <button id="more-menu-btn" class="ace-my-button ace-more-menu-btn">
+                    ${i18n.t('moreBtn')}
+                    <span class="ace-arrow ace-margin-left-arrow">▼</span>
+                </button>
+                <ul id="more-menu" class="ace-dropdown-menu">
+                    <li class="ace-menu-item">
+                        <a href="https://github.com/pi-qiyuan/ai-chat-exporter/blob/main/PRIVACY.md" target="_blank" class="ace-menu-link">
+                            ${i18n.t('privacyPolicy')}
+                        </a>
+                    </li>
+                    <li class="ace-menu-item">
+                        <a href="https://github.com/pi-qiyuan/ai-chat-exporter/issues" target="_blank" class="ace-menu-link">
+                            ${i18n.t('feedback')}
+                        </a>
+                    </li>
+                    <li class="ace-menu-item">
+                        <a href="https://github.com/pi-qiyuan/ai-chat-exporter" target="_blank" class="ace-menu-link">
+                            ${i18n.t('donate')}
+                        </a>
+                    </li>
                 </ul>
             </div>
         `;
 
         if (targetElement.parentNode) {
+            targetElement.parentNode.insertBefore(moreButton, targetElement.nextSibling);
             targetElement.parentNode.insertBefore(exportButton, targetElement.nextSibling);
             targetElement.parentNode.insertBefore(selectButton, targetElement.nextSibling);
             initExportModule();
             initSelectModule();
+            initMoreModule();
         }
 
         if (observer) {
@@ -77,24 +107,24 @@
 
         toggleBtn.addEventListener('click', (event) => {
             event.stopPropagation();
-            const isShowing = menu.classList.toggle('show');
-            toggleBtn.classList.toggle('show-arrow', isShowing);
+            const isShowing = menu.classList.toggle('ace-show');
+            toggleBtn.classList.toggle('ace-show-arrow', isShowing);
         });
 
         menu.addEventListener('click', (event) => {
             const target = event.target;
-            if (target.classList.contains('menu-item')) {
+            if (target.classList.contains('ace-menu-item')) {
                 const format = target.getAttribute('data-format');
                 CopyActions.handleExport(format);
-                menu.classList.remove('show');
-                toggleBtn.classList.remove('show-arrow');
+                menu.classList.remove('ace-show');
+                toggleBtn.classList.remove('ace-show-arrow');
             }
         });
 
         window.addEventListener('click', (event) => {
-            if (menu.classList.contains('show') && !menu.contains(event.target)) {
-                menu.classList.remove('show');
-                toggleBtn.classList.remove('show-arrow');
+            if (menu.classList.contains('ace-show') && !menu.contains(event.target)) {
+                menu.classList.remove('ace-show');
+                toggleBtn.classList.remove('ace-show-arrow');
             }
         });
     }
@@ -115,12 +145,12 @@
 
         toggleBtn.addEventListener('click', (event) => {
             event.stopPropagation();
-            const isShowing = menu.classList.toggle('show');
-            toggleBtn.classList.toggle('show-arrow', isShowing);
+            const isShowing = menu.classList.toggle('ace-show');
+            toggleBtn.classList.toggle('ace-show-arrow', isShowing);
         });
 
         menu.addEventListener('click', (event) => {
-            const target = event.target.closest('.menu-item');
+            const target = event.target.closest('.ace-menu-item');
             if (target) {
                 const action = target.getAttribute('data-action');
                 
@@ -129,34 +159,54 @@
                 CheckActions.manageContainerCheckboxes();
 
                 setTimeout(() => {
-                    const allCheckboxes = document.querySelectorAll('.model-selector');
+                    const allCheckboxes = document.querySelectorAll('.ace-model-selector');
                     
                     if (action === 'all') {
                         allCheckboxes.forEach(c => c.checked = true);
                     } else if (action === 'user') {
                         allCheckboxes.forEach(c => c.checked = false);
                         document.querySelectorAll('user-query').forEach(el => {
-                            const checkbox = el.previousElementSibling?.querySelector('.model-selector');
+                            const checkbox = el.previousElementSibling?.querySelector('.ace-model-selector');
                             if (checkbox) checkbox.checked = true;
                         });
                     } else if (action === 'model') {
                         allCheckboxes.forEach(c => c.checked = false);
                         document.querySelectorAll('message-content').forEach(el => {
-                            const checkbox = el.querySelector('.model-selector');
+                            const checkbox = el.querySelector('.ace-model-selector');
                             if (checkbox) checkbox.checked = true;
                         });
                     }
                 }, 50);
 
-                menu.classList.remove('show');
-                toggleBtn.classList.remove('show-arrow');
+                menu.classList.remove('ace-show');
+                toggleBtn.classList.remove('ace-show-arrow');
             }
         });
 
         window.addEventListener('click', (event) => {
-            if (menu.classList.contains('show') && !menu.contains(event.target) && !toggleBtn.contains(event.target)) {
-                menu.classList.remove('show');
-                toggleBtn.classList.remove('show-arrow');
+            if (menu.classList.contains('ace-show') && !menu.contains(event.target) && !toggleBtn.contains(event.target)) {
+                menu.classList.remove('ace-show');
+                toggleBtn.classList.remove('ace-show-arrow');
+            }
+        });
+    }
+
+    function initMoreModule() {
+        const moreBtn = document.getElementById('more-menu-btn');
+        const menu = document.getElementById('more-menu');
+
+        if (!moreBtn || !menu) return;
+
+        moreBtn.addEventListener('click', (event) => {
+            event.stopPropagation();
+            const isShowing = menu.classList.toggle('ace-show');
+            moreBtn.classList.toggle('ace-show-arrow', isShowing);
+        });
+
+        window.addEventListener('click', (event) => {
+            if (menu.classList.contains('ace-show') && !menu.contains(event.target)) {
+                menu.classList.remove('ace-show');
+                moreBtn.classList.remove('ace-show-arrow');
             }
         });
     }

@@ -37,7 +37,7 @@
     };
 
     function handleExport(format) {
-        const selectedCheckboxes = document.querySelectorAll('.model-selector:checked');
+        const selectedCheckboxes = document.querySelectorAll('.ace-model-selector:checked');
         if (selectedCheckboxes.length === 0) {
             Utils.showToast(i18n.t("noSelection"));
             inSelectMode = true;
@@ -57,7 +57,7 @@
         let combinedResults = "";
 
         selectedCheckboxes.forEach((checkbox, index) => {
-            const labelTag = checkbox.closest('.model-label-tag');
+            const labelTag = checkbox.closest('.ace-model-label-tag');
             if (!labelTag) return;
 
             let type = "";
@@ -99,7 +99,7 @@
 
         try {
             for (const checkbox of selectedCheckboxes) {
-                const labelTag = checkbox.closest('.model-label-tag');
+                const labelTag = checkbox.closest('.ace-model-label-tag');
                 let sectionHeader = "";
                 let buttonToClick = null;
 

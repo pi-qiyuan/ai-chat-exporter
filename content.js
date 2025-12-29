@@ -19,7 +19,7 @@ new MutationObserver(() => {
     if (url !== lastUrl) {
         lastUrl = url;
         inSelectMode = false;
-        document.querySelectorAll('.custom-checkbox-container').forEach(container => container.remove());
+        document.querySelectorAll('.ace-custom-checkbox-container').forEach(container => container.remove());
     }
 
     if (!inSelectMode) {

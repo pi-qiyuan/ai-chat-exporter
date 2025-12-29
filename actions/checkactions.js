@@ -1,11 +1,11 @@
 (function(global){
     const CheckActions = {
         manageUserQueryCheckboxes: () => {
-            manageCheckboxes('user-query', 'model-label-tag', (item, label) => item.before(label));
+            manageCheckboxes('user-query', 'ace-model-label-tag', (item, label) => item.before(label));
         },
 
         manageContainerCheckboxes: () => {
-            manageCheckboxes('message-content', 'model-label-tag model-label-left', (item, label) => item.prepend(label));
+            manageCheckboxes('message-content', 'ace-model-label-tag ace-model-label-left', (item, label) => item.prepend(label));
         }
     };
 
@@ -17,8 +17,8 @@
 
         elements.forEach(item => {
             const alreadyExists = selector === 'user-query' 
-                ? (item.previousElementSibling && item.previousElementSibling.classList.contains('model-label-tag'))
-                : item.querySelector('.model-label-tag');
+                ? (item.previousElementSibling && item.previousElementSibling.classList.contains('ace-model-label-tag'))
+                : item.querySelector('.ace-model-label-tag');
 
             if (alreadyExists) {
                 return;
@@ -28,10 +28,10 @@
             label.className = labelClass;
 
             label.innerHTML = `
-                <div class="custom-checkbox-container">
-                    <input type="checkbox" class="hidden-checkpoint model-selector">
-                    <span class="checkmark"></span>
-                    <span class="label-text">${i18n.t("exportPrompt")}</span>
+                <div class="ace-custom-checkbox-container">
+                    <input type="checkbox" class="ace-hidden-checkpoint ace-model-selector">
+                    <span class="ace-checkmark"></span>
+                    <span class="ace-label-text">${i18n.t("exportPrompt")}</span>
                 </div>
             `;
             insertionLogic(item, label);
