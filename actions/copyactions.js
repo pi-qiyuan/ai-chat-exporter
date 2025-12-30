@@ -39,7 +39,7 @@
     function handleExport(format) {
         const selectedCheckboxes = document.querySelectorAll('.ace-model-selector:checked');
         if (selectedCheckboxes.length === 0) {
-            Utils.showToast(i18n.t("noSelection"));
+            Utils.showToast(chrome.i18n.getMessage("noSelection"));
             inSelectMode = true;
             CheckActions.manageUserQueryCheckboxes();
             CheckActions.manageContainerCheckboxes();
@@ -67,11 +67,11 @@
             const messageContentWrapper = labelTag.closest('message-content');
 
             if (userQueryElement && labelTag.parentElement.contains(userQueryElement)) {
-                type = `${i18n.t("userHeader")}:`;
+                type = `${chrome.i18n.getMessage("userHeader")}:`;
                 text = userQueryElement.innerText;
             } 
             else if (messageContentWrapper) {
-                type = `${i18n.t("modelHeader")}:`;
+                type = `${chrome.i18n.getMessage("modelHeader")}:`;
                 const nextDiv = labelTag.nextElementSibling;
                 text = nextDiv ? nextDiv.innerText : "";
             }
@@ -139,11 +139,11 @@
                 const messageContentWrapper = labelTag.closest('message-content');
 
                 if (userQueryElement && labelTag.parentElement.contains(userQueryElement)) {
-                    sectionHeader = `## ${i18n.t("userHeader")}\n`;
+                    sectionHeader = `## ${chrome.i18n.getMessage("userHeader")}\n`;
                     target = userQueryElement.querySelector('.query-text');
                 } 
                 else if (messageContentWrapper) {
-                    sectionHeader = `## ${i18n.t("modelHeader")}\n`;
+                    sectionHeader = `## ${chrome.i18n.getMessage("modelHeader")}\n`;
                     target = checkbox.closest('message-content').querySelector('div[id^="model-response-message-content"]');
                 }
 

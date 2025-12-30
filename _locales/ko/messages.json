@@ -1,0 +1,19 @@
+{
+  "extensionName": { "message": "AI 채팅 내보내기" },
+  "extensionDescription": { "message": "Gemini 대화를 Markdown 또는 텍스트로 내보내는 경량 브라우저 확장 프로그램입니다." },
+  "selectBtn": { "message": "메시지 선택" },
+  "exportBtn": { "message": "선택한 항목 내보내기" },
+  "exportAsText": { "message": "TXT로 저장" },
+  "exportAsMarkdown": { "message": "Markdown으로 저장" },
+  "noSelection": { "message": "내보낼 항목을 선택해 주세요" },
+  "exportPrompt": { "message": "항목 선택" },
+  "userHeader": { "message": "나" },
+  "modelHeader": { "message": "제미나이" },
+  "selectAll": { "message": "모든 대화 선택" },
+  "selectUser": { "message": "모든 질문 선택" },
+  "selectModel": { "message": "모든 답변 선택" },
+  "moreBtn": { "message": "더보기" },
+  "privacyPolicy": { "message": "개인정보 처리방침" },
+  "feedback": { "message": "피드백" },
+  "donate": { "message": "문의하기" }
+}

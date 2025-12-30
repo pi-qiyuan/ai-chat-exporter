@@ -31,7 +31,7 @@
                 <div class="ace-custom-checkbox-container">
                     <input type="checkbox" class="ace-hidden-checkpoint ace-model-selector">
                     <span class="ace-checkmark"></span>
-                    <span class="ace-label-text">${i18n.t("exportPrompt")}</span>
+                    <span class="ace-label-text">${chrome.i18n.getMessage("exportPrompt")}</span>
                 </div>
             `;
             insertionLogic(item, label);

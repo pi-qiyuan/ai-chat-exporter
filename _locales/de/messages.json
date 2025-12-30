@@ -1,0 +1,19 @@
+{
+  "extensionName": { "message": "AI Chat Exporter" },
+  "extensionDescription": { "message": "Eine leichtgewichtige Browser-Erweiterung zum Exportieren von Gemini-Konversationen in Markdown oder Text." },
+  "selectBtn": { "message": "Nachrichten auswählen" },
+  "exportBtn": { "message": "Auswahl exportieren" },
+  "exportAsText": { "message": "Als TXT exportieren" },
+  "exportAsMarkdown": { "message": "Als Markdown exportieren" },
+  "noSelection": { "message": "Bitte wählen Sie Nachrichten zum Exportieren aus" },
+  "exportPrompt": { "message": "Diesen Teil auswählen" },
+  "userHeader": { "message": "Ich" },
+  "modelHeader": { "message": "Gemini" },
+  "selectAll": { "message": "Alle Gespräche auswählen" },
+  "selectUser": { "message": "Alle Fragen auswählen" },
+  "selectModel": { "message": "Alle Antworten auswählen" },
+  "moreBtn": { "message": "Mehr" },
+  "privacyPolicy": { "message": "Datenschutzerklärung" },
+  "feedback": { "message": "Feedback" },
+  "donate": { "message": "Kontaktieren Sie uns" }
+}

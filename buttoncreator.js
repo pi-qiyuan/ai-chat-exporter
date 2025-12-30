@@ -21,15 +21,15 @@
         selectButton.innerHTML = `
             <div class="ace-button-group">
                 <button id="select-action-btn" class="ace-my-button">
-                    ${i18n.t('selectBtn')}
+                    ${chrome.i18n.getMessage('selectBtn')}
                 </button>
                 <button id="select-menu-toggle-btn" class="ace-dropdown-toggle">
                     <span class="ace-arrow">▼</span>
                 </button>
                 <ul id="select-menu" class="ace-dropdown-menu">
-                    <li class="ace-menu-item" data-action="all">${i18n.t('selectAll')}</li>
-                    <li class="ace-menu-item" data-action="user">${i18n.t('selectUser')}</li>
-                    <li class="ace-menu-item" data-action="model">${i18n.t('selectModel')}</li>
+                    <li class="ace-menu-item" data-action="all">${chrome.i18n.getMessage('selectAll')}</li>
+                    <li class="ace-menu-item" data-action="user">${chrome.i18n.getMessage('selectUser')}</li>
+                    <li class="ace-menu-item" data-action="model">${chrome.i18n.getMessage('selectModel')}</li>
                 </ul>
             </div>
         `;
@@ -39,15 +39,15 @@
         exportButton.innerHTML = `
             <div class="ace-button-group">
                 <button id="main-export-btn" class="ace-my-button">
-                    ${i18n.t('exportBtn')}
+                    ${chrome.i18n.getMessage('exportBtn')}
                 </button>
                 <button id="menu-toggle-btn" class="ace-dropdown-toggle">
                     <span class="ace-arrow">▼</span>
                 </button>
                 
                 <ul id="export-menu" class="ace-dropdown-menu">
-                    <li class="ace-menu-item" data-format="txt">${i18n.t('exportAsText')}</li>
-                    <li class="ace-menu-item" data-format="md">${i18n.t('exportAsMarkdown')}</li>
+                    <li class="ace-menu-item" data-format="txt">${chrome.i18n.getMessage('exportAsText')}</li>
+                    <li class="ace-menu-item" data-format="md">${chrome.i18n.getMessage('exportAsMarkdown')}</li>
                 </ul>
             </div>
         `;
@@ -57,23 +57,23 @@
         moreButton.innerHTML = `
             <div class="ace-button-group">
                 <button id="more-menu-btn" class="ace-my-button ace-more-menu-btn">
-                    ${i18n.t('moreBtn')}
+                    ${chrome.i18n.getMessage('moreBtn')}
                     <span class="ace-arrow ace-margin-left-arrow">▼</span>
                 </button>
                 <ul id="more-menu" class="ace-dropdown-menu">
                     <li class="ace-menu-item">
                         <a href="https://github.com/pi-qiyuan/ai-chat-exporter/blob/main/PRIVACY.md" target="_blank" class="ace-menu-link">
-                            ${i18n.t('privacyPolicy')}
+                            ${chrome.i18n.getMessage('privacyPolicy')}
                         </a>
                     </li>
                     <li class="ace-menu-item">
                         <a href="https://github.com/pi-qiyuan/ai-chat-exporter/issues" target="_blank" class="ace-menu-link">
-                            ${i18n.t('feedback')}
+                            ${chrome.i18n.getMessage('feedback')}
                         </a>
                     </li>
                     <li class="ace-menu-item">
                         <a href="https://github.com/pi-qiyuan/ai-chat-exporter" target="_blank" class="ace-menu-link">
-                            ${i18n.t('donate')}
+                            ${chrome.i18n.getMessage('donate')}
                         </a>
                     </li>
                 </ul>
@@ -140,7 +140,7 @@
             inSelectMode = true;
             CheckActions.manageUserQueryCheckboxes();
             CheckActions.manageContainerCheckboxes();
-            Utils.showToast(i18n.t('noSelection'));
+            Utils.showToast(chrome.i18n.getMessage('noSelection'));
         });
 
         toggleBtn.addEventListener('click', (event) => {
