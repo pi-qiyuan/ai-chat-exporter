@@ -15,5 +15,8 @@
   "moreBtn": { "message": "더보기" },
   "privacyPolicy": { "message": "개인정보 처리방침" },
   "feedback": { "message": "피드백" },
-  "donate": { "message": "문의하기" }
+  "donate": { "message": "문의하기" },
+  "clearHistory": { "message": "내보내기 기록 삭제" },
+  "historyCleared": { "message": "내보내기 기록이 삭제되었습니다" },
+  "exportedTag": { "message": "(내보냄)" }
 }

@@ -61,6 +61,11 @@
                     <span class="ace-arrow ace-margin-left-arrow">▼</span>
                 </button>
                 <ul id="more-menu" class="ace-dropdown-menu">
+                    <li class="ace-menu-item" id="clear-history-btn">
+                         <span class="ace-menu-link" style="cursor: pointer;">
+                            ${chrome.i18n.getMessage('clearHistory')}
+                        </span>
+                    </li>
                     <li class="ace-menu-item">
                         <a href="https://github.com/pi-qiyuan/ai-chat-exporter/blob/main/PRIVACY.md" target="_blank" class="ace-menu-link">
                             ${chrome.i18n.getMessage('privacyPolicy')}
@@ -194,6 +199,7 @@
     function initMoreModule() {
         const moreBtn = document.getElementById('more-menu-btn');
         const menu = document.getElementById('more-menu');
+        const clearHistoryBtn = document.getElementById('clear-history-btn');
 
         if (!moreBtn || !menu) return;
 
@@ -202,6 +208,21 @@
             const isShowing = menu.classList.toggle('ace-show');
             moreBtn.classList.toggle('ace-show-arrow', isShowing);
         });
+
+        if (clearHistoryBtn) {
+            clearHistoryBtn.addEventListener('click', async () => {
+                await StorageManager.removeGeminiIds();
+
+                const statusSpans = document.querySelectorAll('.ace-exported-status');
+                statusSpans.forEach(span => {
+                    span.innerText = '';
+                });
+
+                Utils.showToast(chrome.i18n.getMessage('historyCleared'));
+                menu.classList.remove('ace-show');
+                moreBtn.classList.remove('ace-show-arrow');
+            });
+        }
 
         window.addEventListener('click', (event) => {
             if (menu.classList.contains('ace-show') && !menu.contains(event.target)) {

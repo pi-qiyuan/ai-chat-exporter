@@ -4,7 +4,7 @@
     "description": "Name of the extension"
   },
   "extensionDescription": {
-    "message": "A lightweight browser extension to export Gemini conversations to Markdown or Text.",
+    "message": "Export Gemini conversations to Markdown or Text with one click. Supports selective export and preserves formatting.",
     "description": "Description of the extension"
   },
   "selectBtn": { "message": "Select Messages" },
@@ -21,5 +21,8 @@
   "moreBtn": { "message": "More" },
   "privacyPolicy": { "message": "Privacy Policy" },
   "feedback": { "message": "Feedback" },
-  "donate": { "message": "Contact Us" }
+  "donate": { "message": "Contact Us" },
+  "clearHistory": { "message": "Clear Export History" },
+  "historyCleared": { "message": "Export history cleared" },
+  "exportedTag": { "message": "(Exported)" }
 }

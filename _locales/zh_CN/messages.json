@@ -15,5 +15,8 @@
   "moreBtn": { "message": "更多" },
   "privacyPolicy": { "message": "隐私声明" },
   "feedback": { "message": "反馈" },
-  "donate": { "message": "联系我们" }
+  "donate": { "message": "联系我们" },
+  "clearHistory": { "message": "清除导出记录" },
+  "historyCleared": { "message": "导出记录已清除" },
+  "exportedTag": { "message": "(已导出)" }
 }

@@ -15,5 +15,8 @@
   "moreBtn": { "message": "Más" },
   "privacyPolicy": { "message": "Política de privacidad" },
   "feedback": { "message": "Comentarios" },
-  "donate": { "message": "Contáctenos" }
+  "donate": { "message": "Contáctenos" },
+  "clearHistory": { "message": "Borrar historial de exportación" },
+  "historyCleared": { "message": "Historial de exportación borrado" },
+  "exportedTag": { "message": "(Exportado)" }
 }

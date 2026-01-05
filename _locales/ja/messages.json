@@ -15,5 +15,8 @@
   "moreBtn": { "message": "その他" },
   "privacyPolicy": { "message": "プライバシーポリシー" },
   "feedback": { "message": "フィードバック" },
-  "donate": { "message": "お問い合わせ" }
+  "donate": { "message": "お問い合わせ" },
+  "clearHistory": { "message": "エクスポート履歴をクリア" },
+  "historyCleared": { "message": "エクスポート履歴がクリアされました" },
+  "exportedTag": { "message": "(エクスポート済み)" }
 }

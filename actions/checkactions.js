@@ -31,10 +31,30 @@
                 <div class="ace-custom-checkbox-container">
                     <input type="checkbox" class="ace-hidden-checkpoint ace-model-selector">
                     <span class="ace-checkmark"></span>
-                    <span class="ace-label-text">${chrome.i18n.getMessage("exportPrompt")}</span>
+                    <span class="ace-label-text">
+                        ${chrome.i18n.getMessage("exportPrompt")}
+                        <span class="ace-exported-status"></span>
+                    </span>
                 </div>
             `;
             insertionLogic(item, label);
+
+            const type = selector === 'user-query' ? 'user' : 'model';
+            const node = selector === 'user-query' ? item.parentElement : item;
+            
+            if (typeof StorageManager !== 'undefined') {
+                const geminiId = StorageManager.generateGeminiId(node, type);
+                if (geminiId) {
+                    StorageManager.isIdExported(geminiId).then(isExported => {
+                        if (isExported) {
+                            const statusSpan = label.querySelector('.ace-exported-status');
+                            if (statusSpan) {
+                                statusSpan.innerText = chrome.i18n.getMessage("exportedTag");
+                            }
+                        }
+                    });
+                }
+            }
         });
     }
 
