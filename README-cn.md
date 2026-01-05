@@ -8,7 +8,7 @@
 - **隐私安全**: 代码开源，所有处理均在本地完成。
 
 ### 安装
-(待上架后补充商店链接)
+[从 Chrome Web Store 下载](https://chromewebstore.google.com/detail/ai-chat-exporter/gnplifnbchmpeggocmkejocgldkahgnc)
 
 ### 使用方法
 1. 打开 Gemini 聊天页面。

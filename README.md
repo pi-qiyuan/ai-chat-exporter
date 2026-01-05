@@ -8,7 +8,7 @@ A lightweight browser extension to export Gemini conversations to Markdown or Te
 - **Privacy**: The code is open source, and all processing is done locally.
 
 ### Installation
-(Link will be added after Chrome Store approval)
+[Download on Chrome Web Store](https://chromewebstore.google.com/detail/ai-chat-exporter/gnplifnbchmpeggocmkejocgldkahgnc)
 
 ### Usage
 1. Open the Gemini chat web page.
