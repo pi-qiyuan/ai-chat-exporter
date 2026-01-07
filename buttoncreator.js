@@ -6,12 +6,7 @@
     };
 
     function insertExportButton(observer) {
-        const targetElement = document.querySelector('toolbox-drawer');
-        if(!targetElement){
-            return;
-        }
-
-        if (document.getElementById('exportButton')) {
+        if (document.getElementById('main-export-btn')) {
             if (observer) observer.disconnect();
             return;
         }
@@ -85,17 +80,19 @@
             </div>
         `;
 
-        if (targetElement.parentNode) {
-            targetElement.parentNode.insertBefore(moreButton, targetElement.nextSibling);
-            targetElement.parentNode.insertBefore(exportButton, targetElement.nextSibling);
-            targetElement.parentNode.insertBefore(selectButton, targetElement.nextSibling);
-            initExportModule();
-            initSelectModule();
-            initMoreModule();
-        }
+        const buttons = { selectButton, exportButton, moreButton };
+        const providers = [ChatGPTProvider, GeminiProvider];
 
-        if (observer) {
-            observer.disconnect();
+        for (const provider of providers) {
+            if (provider.isApplicable()) {
+                if (provider.insertButtons(buttons)) {
+                    if (observer) observer.disconnect();
+                    initExportModule();
+                    initSelectModule();
+                    initMoreModule();
+                }
+                break;
+            }
         }
     }
 
@@ -142,7 +139,7 @@
         if (!selectBtn || !toggleBtn || !menu) return;
 
         selectBtn.addEventListener('click', function() {
-            inSelectMode = true;
+            AppState.inSelectMode = true;
             CheckActions.manageUserQueryCheckboxes();
             CheckActions.manageContainerCheckboxes();
             Utils.showToast(chrome.i18n.getMessage('noSelection'));
@@ -159,24 +156,24 @@
             if (target) {
                 const action = target.getAttribute('data-action');
                 
-                inSelectMode = true;
+                AppState.inSelectMode = true;
                 CheckActions.manageUserQueryCheckboxes();
                 CheckActions.manageContainerCheckboxes();
 
                 setTimeout(() => {
                     const allCheckboxes = document.querySelectorAll('.ace-model-selector');
-                    
+
                     if (action === 'all') {
                         allCheckboxes.forEach(c => c.checked = true);
                     } else if (action === 'user') {
                         allCheckboxes.forEach(c => c.checked = false);
-                        document.querySelectorAll('user-query').forEach(el => {
-                            const checkbox = el.previousElementSibling?.querySelector('.ace-model-selector');
+                        document.querySelectorAll('.ace-checkbox-user').forEach(el => {
+                            const checkbox = el.querySelector('.ace-model-selector');
                             if (checkbox) checkbox.checked = true;
                         });
                     } else if (action === 'model') {
                         allCheckboxes.forEach(c => c.checked = false);
-                        document.querySelectorAll('message-content').forEach(el => {
+                        document.querySelectorAll('.ace-checkbox-model').forEach(el => {
                             const checkbox = el.querySelector('.ace-model-selector');
                             if (checkbox) checkbox.checked = true;
                         });
@@ -211,7 +208,7 @@
 
         if (clearHistoryBtn) {
             clearHistoryBtn.addEventListener('click', async () => {
-                await StorageManager.removeGeminiIds();
+                await StorageManager.removeChatIds();
 
                 const statusSpans = document.querySelectorAll('.ace-exported-status');
                 statusSpans.forEach(span => {

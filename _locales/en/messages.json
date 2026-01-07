@@ -14,7 +14,6 @@
   "noSelection": { "message": "Please select messages to export" },
   "exportPrompt": { "message": "Select this message" },
   "userHeader": { "message": "Me" },
-  "modelHeader": { "message": "Gemini" },
   "selectAll": { "message": "Select All Conversations" },
   "selectUser": { "message": "Select All Prompts" },
   "selectModel": { "message": "Select All Responses" },

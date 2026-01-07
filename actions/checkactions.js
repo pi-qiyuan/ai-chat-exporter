@@ -1,22 +1,30 @@
 (function(global){
     const CheckActions = {
         manageUserQueryCheckboxes: () => {
-            manageCheckboxes('user-query', 'ace-model-label-tag', (item, label) => item.before(label));
+            manageCheckboxes('user');
         },
 
         manageContainerCheckboxes: () => {
-            manageCheckboxes('message-content', 'ace-model-label-tag ace-model-label-left', (item, label) => item.prepend(label));
+            manageCheckboxes('model');
         }
     };
 
-    function manageCheckboxes(selector, labelClass, insertionLogic) {
-        const elements = document.querySelectorAll(selector);
-        if (elements.length === 0) {
-            return;
+    function manageCheckboxes(type) {
+        let selector = null;
+        if (GeminiProvider.isApplicable()) {
+            selector = type === 'user' 
+                ? 'user-query'
+                : 'message-content';
+        } else if (ChatGPTProvider.isApplicable()) {
+            selector = type === 'user' 
+                ? 'div[data-message-author-role="user"]'
+                : 'div[data-message-author-role="assistant"]';
         }
 
+        const elements = document.querySelectorAll(selector);
+
         elements.forEach(item => {
-            const alreadyExists = selector === 'user-query' 
+            const alreadyExists = type === 'user' 
                 ? (item.previousElementSibling && item.previousElementSibling.classList.contains('ace-model-label-tag'))
                 : item.querySelector('.ace-model-label-tag');
 
@@ -25,7 +33,9 @@
             }
 
             const label = document.createElement('label');
-            label.className = labelClass;
+            label.className = type == 'user' 
+                ? 'ace-model-label-tag ace-checkbox-user'
+                : 'ace-model-label-tag ace-model-label-left ace-checkbox-model';
 
             label.innerHTML = `
                 <div class="ace-custom-checkbox-container">
@@ -37,23 +47,20 @@
                     </span>
                 </div>
             `;
-            insertionLogic(item, label);
+            type === 'user' 
+                ? item.before(label)
+                : item.prepend(label);
 
-            const type = selector === 'user-query' ? 'user' : 'model';
-            const node = selector === 'user-query' ? item.parentElement : item;
-            
-            if (typeof StorageManager !== 'undefined') {
-                const geminiId = StorageManager.generateGeminiId(node, type);
-                if (geminiId) {
-                    StorageManager.isIdExported(geminiId).then(isExported => {
-                        if (isExported) {
-                            const statusSpan = label.querySelector('.ace-exported-status');
-                            if (statusSpan) {
-                                statusSpan.innerText = chrome.i18n.getMessage("exportedTag");
-                            }
+            let chatId = StorageManager.generateChatId(item, type);
+            if (chatId) {
+                StorageManager.isIdExported(chatId).then(isExported => {
+                    if (isExported) {
+                        const statusSpan = label.querySelector('.ace-exported-status');
+                        if (statusSpan) {
+                            statusSpan.innerText = chrome.i18n.getMessage("exportedTag");
                         }
-                    });
-                }
+                    }
+                });
             }
         });
     }

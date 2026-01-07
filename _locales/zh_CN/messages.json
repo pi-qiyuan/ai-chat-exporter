@@ -8,7 +8,6 @@
   "noSelection": { "message": "请勾选需要导出的内容" },
   "exportPrompt": { "message": "选中此段" },
   "userHeader": { "message": "我" },
-  "modelHeader": { "message": "Gemini" },
   "selectAll": { "message": "选择所有对话" },
   "selectUser": { "message": "选择全部提问" },
   "selectModel": { "message": "选择全部回答" },

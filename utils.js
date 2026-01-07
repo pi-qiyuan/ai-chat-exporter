@@ -1,4 +1,10 @@
 (function(global){
+    global.AppState = {
+        isChatGPT: window.location.hostname.includes('chatgpt.com'),
+        isGemini: window.location.hostname.includes('gemini.google.com'),
+        inSelectMode: false
+    };
+
     const Utils = {
         showToast: (message, duration = 3000) => {
             showToast(message, duration);

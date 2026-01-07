@@ -1,3 +1,10 @@
+/* for chatgpt input box */
+form[class*="group/composer"] div[class*="corner-"] {
+    border-bottom-left-radius: 0px !important;
+    border-bottom-right-radius: 0px !important;
+}
+
+
 .ace-export-button {
     border: 0px;
     background: transparent;
@@ -268,4 +275,10 @@
     color: #4caf50;
     font-size: 0.8em;
     margin-left: 5px;
+}
+
+.ace-chatgpt-container {
+    display: flex;
+    align-items: center;
+    padding: 8px;
 }

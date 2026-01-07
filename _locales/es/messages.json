@@ -8,7 +8,6 @@
   "noSelection": { "message": "Por favor, selecciona mensajes para exportar" },
   "exportPrompt": { "message": "Seleccionar esto" },
   "userHeader": { "message": "Yo" },
-  "modelHeader": { "message": "Gemini" },
   "selectAll": { "message": "Todas las conversaciones" },
   "selectUser": { "message": "Todas las preguntas" },
   "selectModel": { "message": "Todas las respuestas" },

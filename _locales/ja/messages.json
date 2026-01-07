@@ -8,7 +8,6 @@
   "noSelection": { "message": "書き出す内容を選択してください" },
   "exportPrompt": { "message": "これを選択" },
   "userHeader": { "message": "自分" },
-  "modelHeader": { "message": "ジェミニ" },
   "selectAll": { "message": "すべての会話を選択" },
   "selectUser": { "message": "すべての質問を選択" },
   "selectModel": { "message": "すべての回答を選択" },

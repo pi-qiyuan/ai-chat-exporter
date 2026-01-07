@@ -12,17 +12,21 @@ if (targetNode) {
     observer.observe(targetNode, config);
 }
 
-let inSelectMode = false;
 let lastUrl = location.href;
 new MutationObserver(() => {
     const url = location.href;
     if (url !== lastUrl) {
         lastUrl = url;
-        inSelectMode = false;
+        AppState.inSelectMode = false;
         document.querySelectorAll('.ace-custom-checkbox-container').forEach(container => container.remove());
+
+        const observer = new MutationObserver((_mutationsList, obs) => {
+            ButtonCreator.insertExportButton(obs);
+        });
+        observer.observe(targetNode, config);
     }
 
-    if (!inSelectMode) {
+    if (!AppState.inSelectMode) {
         return;
     }
     CheckActions.manageUserQueryCheckboxes();

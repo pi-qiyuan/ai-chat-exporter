@@ -5,42 +5,11 @@
         }
     };
 
-    const SnackbarManager = {
-        styleId: 'silent-copy-style',
-
-        disableNotifications: function() {
-            if (document.getElementById(this.styleId)) return;
-
-            const style = document.createElement('style');
-            style.id = this.styleId;
-            style.innerHTML = `
-                .cdk-overlay-container,
-                .cdk-global-overlay-wrapper,
-                .mat-mdc-snack-bar-container {
-                    display: none !important;
-                    visibility: hidden !important;
-                    opacity: 0 !important;
-                    pointer-events: none !important;
-                }
-            `;
-            document.head.appendChild(style);
-        },
-
-        enableNotifications: function(delay = 3000) {
-            setTimeout(() => {
-                const style = document.getElementById(this.styleId);
-                if (style) {
-                    style.remove();
-                }
-            }, delay);
-        }
-    };
-
     function handleExport(format) {
         const selectedCheckboxes = document.querySelectorAll('.ace-model-selector:checked');
         if (selectedCheckboxes.length === 0) {
             Utils.showToast(chrome.i18n.getMessage("noSelection"));
-            inSelectMode = true;
+            AppState.inSelectMode = true;
             CheckActions.manageUserQueryCheckboxes();
             CheckActions.manageContainerCheckboxes();
             return;
@@ -54,20 +23,27 @@
     }
 
     async function processExport(selectedCheckboxes, options) {
-        const { extension, formatItem, onStart, onEnd } = options;
-        if (onStart) onStart();
+        const { extension, formatItem } = options;
 
         let finalContent = "";
-        const geminiIdsToSave = {};
+        const chatIdsToSave = {};
 
         try {
             for (const checkbox of selectedCheckboxes) {
                 const labelTag = checkbox.closest('.ace-model-label-tag');
                 if (!labelTag) continue;
 
-                const userQueryElement = labelTag.parentElement.querySelector('user-query');
-                const messageContentWrapper = labelTag.closest('message-content');
-                
+                let userQueryElement = null;
+                let messageContentWrapper = null;
+
+                if (GeminiProvider.isApplicable()) {
+                    userQueryElement = labelTag.parentElement.querySelector('user-query');
+                    messageContentWrapper = labelTag.closest('message-content');
+                } else if (ChatGPTProvider.isApplicable()) {
+                    userQueryElement = labelTag.parentElement.querySelector('div[data-message-author-role="user"]');
+                    messageContentWrapper = labelTag.parentElement.querySelector('div');
+                }
+
                 let type = "";
                 if (userQueryElement && labelTag.parentElement.contains(userQueryElement)) {
                     type = "user";
@@ -75,9 +51,14 @@
                     type = "model";
                 }
 
-                const geminiId = StorageManager.generateGeminiId(labelTag.parentElement, type);
-                if (geminiId) {
-                    geminiIdsToSave[geminiId] = true;
+                let chatId = null;
+                if (GeminiProvider.isApplicable()) {
+                    chatId = StorageManager.generateChatId(labelTag, type);
+                } else if (ChatGPTProvider.isApplicable()) {
+                    chatId = StorageManager.generateChatId(type == "user" ? userQueryElement : labelTag.parentElement, type);
+                }
+                if (chatId) {
+                    chatIdsToSave[chatId] = true;
                 }
 
                 const context = {
@@ -87,15 +68,15 @@
                     messageContentWrapper,
                     type
                 };
-                
+
                 const itemContent = formatItem(context);
                 if (itemContent) {
                     finalContent += itemContent;
                 }
             }
 
-            if (Object.keys(geminiIdsToSave).length > 0) {
-                await StorageManager.saveGeminiIds(geminiIdsToSave);
+            if (Object.keys(chatIdsToSave).length > 0) {
+                await StorageManager.saveChatIds(chatIdsToSave);
 
                 const exportedText = chrome.i18n.getMessage("exportedTag");
                 for (const checkbox of selectedCheckboxes) {
@@ -113,14 +94,18 @@
                 Utils.downloadText(finalContent, getFilename() + "." + extension);
                 selectedCheckboxes.forEach(cb => cb.checked = false);
             }
-
         } catch (error) {
-        } finally {
-            if (onEnd) onEnd();
         }
     }
 
     async function exportAsText(selectedCheckboxes) {
+        let modelName = '';
+        if (GeminiProvider.isApplicable()) {
+            modelName = GeminiProvider.name;
+        } else if (ChatGPTProvider.isApplicable()) {
+            modelName = ChatGPTProvider.name;
+        }
+
         await processExport(selectedCheckboxes, {
             extension: 'txt',
             formatItem: (ctx) => {
@@ -129,11 +114,11 @@
 
                 if (ctx.type === 'user') {
                     typeName = `${chrome.i18n.getMessage("userHeader")}:`;
-                    text = ctx.userQueryElement.innerText;
+                    text = ctx.userQueryElement.textContent;
                 } else if (ctx.type === 'model') {
-                    typeName = `${chrome.i18n.getMessage("modelHeader")}:`;
+                    typeName = `${modelName}:`;
                     const nextDiv = ctx.labelTag.nextElementSibling;
-                    text = nextDiv ? nextDiv.innerText : "";
+                    text = nextDiv ? nextDiv.textContent : "";
                 }
 
                 if (typeName && text) {
@@ -160,11 +145,20 @@
             },
             replacement: function (_content, node, options) {
                 let language = '';
-                let parent = node.closest('code-block');
-                if (parent) {
+
+                if (GeminiProvider.isApplicable()) {
+                    let parent = node.closest('code-block');
                     let codeDecoration = parent.querySelector('.code-block-decoration');
                     if (codeDecoration) {
-                        language = codeDecoration.innerText;
+                        language = codeDecoration.textContent;
+                    }
+                } else if (ChatGPTProvider.isApplicable()) {
+                    const codeDiv = node.querySelector('code[class*="whitespace-pre!"][class*="language-"]');
+                    if (codeDiv) {
+                        const langClass = Array.from(codeDiv.classList).find(c => c.startsWith('language-'));
+                        if (langClass) {
+                            language = langClass.replace('language-', '');
+                        }
                     }
                 }
 
@@ -179,22 +173,25 @@
 
         await processExport(selectedCheckboxes, {
             extension: 'md',
-            onStart: () => {
-                if (typeof SnackbarManager !== 'undefined') SnackbarManager.disableNotifications();
-            },
-            onEnd: () => {
-                if (typeof SnackbarManager !== 'undefined') SnackbarManager.enableNotifications(3000);
-            },
             formatItem: (ctx) => {
                 let sectionHeader = "";
                 let target = null;
 
                 if (ctx.type === 'user') {
                     sectionHeader = `## ${chrome.i18n.getMessage("userHeader")}\n`;
-                    target = ctx.userQueryElement.querySelector('.query-text');
+                    if (GeminiProvider.isApplicable()) {
+                        target = ctx.userQueryElement.querySelector('.query-text');
+                    } else if (ChatGPTProvider.isApplicable()) {
+                        target = ctx.userQueryElement;
+                    }
                 } else if (ctx.type === 'model') {
-                    sectionHeader = `## ${chrome.i18n.getMessage("modelHeader")}\n`;
-                    target = ctx.checkbox.closest('message-content').querySelector('div[id^="model-response-message-content"]');
+                    if (GeminiProvider.isApplicable()) {
+                        sectionHeader = `## ${GeminiProvider.name}\n`;
+                        target = ctx.checkbox.closest('message-content').querySelector('div[id^="model-response-message-content"]');
+                    } else if (ChatGPTProvider.isApplicable()) {
+                        sectionHeader = `## ${ChatGPTProvider.name}\n`;
+                        target = ctx.checkbox.closest('div[data-message-author-role="assistant"]').querySelector('div[class^="markdown"]');
+                    }
                 }
 
                 if (target) {
@@ -207,11 +204,21 @@
     }
 
     function getFilename() {
-        let div = document.querySelector('.conversation-title');
-        if (div) {
-            return div.innerText;
+        if (GeminiProvider.isApplicable()) {
+            let div = document.querySelector('.conversation-title');
+            if (div) {
+                return div.textContent;
+            }
+            return GeminiProvider.name;
+        } else if (ChatGPTProvider.isApplicable()) {
+            let div = document.querySelector('a[data-active]');
+            if (div) {
+                return div.textContent;
+            }
+            return ChatGPTProvider.name;
         }
-        return "gemini";
+
+        return "";
     }
 
     global.CopyActions = CopyActions;

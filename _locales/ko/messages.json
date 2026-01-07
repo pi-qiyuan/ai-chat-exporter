@@ -8,7 +8,6 @@
   "noSelection": { "message": "내보낼 항목을 선택해 주세요" },
   "exportPrompt": { "message": "항목 선택" },
   "userHeader": { "message": "나" },
-  "modelHeader": { "message": "제미나이" },
   "selectAll": { "message": "모든 대화 선택" },
   "selectUser": { "message": "모든 질문 선택" },
   "selectModel": { "message": "모든 답변 선택" },
