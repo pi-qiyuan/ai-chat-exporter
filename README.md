@@ -21,6 +21,12 @@ A lightweight browser extension to export Gemini conversations to Markdown or Te
 - Styling: CSS3
 - Format Conversion: [Turndown](https://github.com/mixmark-io/turndown) (MIT License) — used for elegantly converting HTML to Markdown.
 
+### Changelog
+#### v1.1.0
+- Added: Remember exported messages with visual indicators.
+#### v1.0.0
+- Initial release with Gemini support.
+
 ### Acknowledgments
 - Special thanks to the [Turndown](https://github.com/mixmark-io/turndown) project. This project utilizes its MIT-licensed source code to implement the HTML-to-Markdown conversion functionality.
 
