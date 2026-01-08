@@ -81,18 +81,12 @@
         `;
 
         const buttons = { selectButton, exportButton, moreButton };
-        const providers = [ChatGPTProvider, GeminiProvider];
-
-        for (const provider of providers) {
-            if (provider.isApplicable()) {
-                if (provider.insertButtons(buttons)) {
-                    if (observer) observer.disconnect();
-                    initExportModule();
-                    initSelectModule();
-                    initMoreModule();
-                }
-                break;
-            }
+        
+        if (AppState.currentProvider && AppState.currentProvider.insertButtons(buttons)) {
+            if (observer) observer.disconnect();
+            initExportModule();
+            initSelectModule();
+            initMoreModule();
         }
     }
 

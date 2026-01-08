@@ -1,8 +1,14 @@
+if (window.location.hostname.includes('gemini.google.com')) {
+    AppState.currentProvider = GeminiProvider;
+} else if (window.location.hostname.includes('chatgpt.com')) {
+    AppState.currentProvider = ChatGPTProvider;
+}
+
 document.addEventListener('DOMContentLoaded', () => {
     ButtonCreator.insertExportButton(observer);
 });
 
-const observer = new MutationObserver((mutationsList, obs) => {
+const observer = new MutationObserver((_mutationsList, obs) => {
     ButtonCreator.insertExportButton(obs);
 });
 
@@ -29,6 +35,7 @@ new MutationObserver(() => {
     if (!AppState.inSelectMode) {
         return;
     }
+
     CheckActions.manageUserQueryCheckboxes();
     CheckActions.manageContainerCheckboxes();
 }).observe(document, {subtree: true, childList: true});

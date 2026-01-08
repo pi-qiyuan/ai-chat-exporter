@@ -1,14 +1,17 @@
 (function(global) {
     const GeminiProvider = {
         name: "Gemini",
-        isApplicable: () => isApplicableInternal(),
+        selectors: {
+            user: 'user-query',
+            model: 'message-content'
+        },
         insertButtons: (buttons) => insertButtonsInternal(buttons),
-        generateChatId: (item, type) => generateChatIdInternal(item, type)
+        generateChatId: (item, type) => generateChatIdInternal(item, type),
+        getFilename: () => getFilenameInternal(),
+        getTextContent: (context) => getTextContentInternal(context),
+        getMarkdownTarget: (context) => getMarkdownTargetInternal(context),
+        getCodeLanguage: (node) => getCodeLanguageInternal(node)
     };
-
-    function isApplicableInternal() {
-        return window.location.hostname.includes('gemini.google.com');
-    }
 
     function insertButtonsInternal(buttons) {
         const targetElement = document.querySelector('toolbox-drawer');
@@ -68,6 +71,44 @@
         }
 
         return null;
+    }
+
+    function getFilenameInternal() {
+        let div = document.querySelector('.conversation-title');
+        if (div) {
+            return div.textContent;
+        }
+        return GeminiProvider.name;
+    }
+
+    function getTextContentInternal(ctx) {
+        if (ctx.type === 'user') {
+            return ctx.userQueryElement.textContent;
+        } else if (ctx.type === 'model') {
+            const nextDiv = ctx.labelTag.nextElementSibling;
+            return nextDiv ? nextDiv.textContent : "";
+        }
+        return "";
+    }
+
+    function getMarkdownTargetInternal(ctx) {
+        if (ctx.type === 'user') {
+            return ctx.userQueryElement.querySelector('.query-text');
+        } else if (ctx.type === 'model') {
+            return ctx.checkbox.closest('message-content').querySelector('div[id^="model-response-message-content"]');
+        }
+        return null;
+    }
+
+    function getCodeLanguageInternal(node) {
+        let parent = node.closest('code-block');
+        if (parent) {
+             let codeDecoration = parent.querySelector('.code-block-decoration');
+             if (codeDecoration) {
+                 return codeDecoration.textContent;
+             }
+        }
+        return '';
     }
 
     global.GeminiProvider = GeminiProvider;

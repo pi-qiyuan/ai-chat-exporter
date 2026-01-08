@@ -10,13 +10,10 @@
     };
 
     function generateChatIdInternal(item, type) {
-        if (GeminiProvider.isApplicable()) {
-            return GeminiProvider.generateChatId(item, type);
+        if (AppState.currentProvider && AppState.currentProvider.generateChatId) {
+            return AppState.currentProvider.generateChatId(item, type);
         }
-
-        if (ChatGPTProvider.isApplicable()) {
-            return ChatGPTProvider.generateChatId(item, type);
-        }
+        return null;
     }
 
     async function isIdExportedInternal(chatId) {

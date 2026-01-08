@@ -1,7 +1,6 @@
 (function(global){
     global.AppState = {
-        isChatGPT: window.location.hostname.includes('chatgpt.com'),
-        isGemini: window.location.hostname.includes('gemini.google.com'),
+        currentProvider: null,
         inSelectMode: false
     };
 

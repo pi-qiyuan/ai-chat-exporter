@@ -277,6 +277,11 @@ form[class*="group/composer"] div[class*="corner-"] {
     margin-left: 5px;
 }
 
+.ace-chatgpt-chatform {
+    border: 1px solid #ddd;
+    border-radius: 28px;
+}
+
 .ace-chatgpt-container {
     display: flex;
     align-items: center;

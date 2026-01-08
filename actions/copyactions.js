@@ -27,6 +27,8 @@
 
         let finalContent = "";
         const chatIdsToSave = {};
+        const provider = AppState.currentProvider;
+        if (!provider) return;
 
         try {
             for (const checkbox of selectedCheckboxes) {
@@ -36,27 +38,27 @@
                 let userQueryElement = null;
                 let messageContentWrapper = null;
 
-                if (GeminiProvider.isApplicable()) {
-                    userQueryElement = labelTag.parentElement.querySelector('user-query');
-                    messageContentWrapper = labelTag.closest('message-content');
-                } else if (ChatGPTProvider.isApplicable()) {
-                    userQueryElement = labelTag.parentElement.querySelector('div[data-message-author-role="user"]');
-                    messageContentWrapper = labelTag.parentElement.querySelector('div');
+                userQueryElement = labelTag.parentElement.querySelector(provider.selectors.user);
+                if (labelTag.classList.contains('ace-checkbox-user')) {
+                     userQueryElement = labelTag.nextElementSibling;
+                } else {
+                     messageContentWrapper = labelTag.parentElement; 
                 }
 
                 let type = "";
-                if (userQueryElement && labelTag.parentElement.contains(userQueryElement)) {
+                if (userQueryElement) {
                     type = "user";
                 } else if (messageContentWrapper) {
                     type = "model";
                 }
 
                 let chatId = null;
-                if (GeminiProvider.isApplicable()) {
-                    chatId = StorageManager.generateChatId(labelTag, type);
-                } else if (ChatGPTProvider.isApplicable()) {
-                    chatId = StorageManager.generateChatId(type == "user" ? userQueryElement : labelTag.parentElement, type);
+                if (type === "user") {
+                    chatId = StorageManager.generateChatId(userQueryElement, type);
+                } else {
+                    chatId = StorageManager.generateChatId(messageContentWrapper, type);
                 }
+
                 if (chatId) {
                     chatIdsToSave[chatId] = true;
                 }
@@ -99,12 +101,7 @@
     }
 
     async function exportAsText(selectedCheckboxes) {
-        let modelName = '';
-        if (GeminiProvider.isApplicable()) {
-            modelName = GeminiProvider.name;
-        } else if (ChatGPTProvider.isApplicable()) {
-            modelName = ChatGPTProvider.name;
-        }
+        let modelName = AppState.currentProvider ? AppState.currentProvider.name : 'AI';
 
         await processExport(selectedCheckboxes, {
             extension: 'txt',
@@ -114,11 +111,12 @@
 
                 if (ctx.type === 'user') {
                     typeName = `${chrome.i18n.getMessage("userHeader")}:`;
-                    text = ctx.userQueryElement.textContent;
                 } else if (ctx.type === 'model') {
                     typeName = `${modelName}:`;
-                    const nextDiv = ctx.labelTag.nextElementSibling;
-                    text = nextDiv ? nextDiv.textContent : "";
+                }
+                
+                if (AppState.currentProvider) {
+                    text = AppState.currentProvider.getTextContent(ctx);
                 }
 
                 if (typeName && text) {
@@ -145,21 +143,8 @@
             },
             replacement: function (_content, node, options) {
                 let language = '';
-
-                if (GeminiProvider.isApplicable()) {
-                    let parent = node.closest('code-block');
-                    let codeDecoration = parent.querySelector('.code-block-decoration');
-                    if (codeDecoration) {
-                        language = codeDecoration.textContent;
-                    }
-                } else if (ChatGPTProvider.isApplicable()) {
-                    const codeDiv = node.querySelector('code[class*="whitespace-pre!"][class*="language-"]');
-                    if (codeDiv) {
-                        const langClass = Array.from(codeDiv.classList).find(c => c.startsWith('language-'));
-                        if (langClass) {
-                            language = langClass.replace('language-', '');
-                        }
-                    }
+                if (AppState.currentProvider && AppState.currentProvider.getCodeLanguage) {
+                    language = AppState.currentProvider.getCodeLanguage(node);
                 }
 
                 const codeElement = node.querySelector('code');
@@ -176,22 +161,16 @@
             formatItem: (ctx) => {
                 let sectionHeader = "";
                 let target = null;
+                const provider = AppState.currentProvider;
 
                 if (ctx.type === 'user') {
                     sectionHeader = `## ${chrome.i18n.getMessage("userHeader")}\n`;
-                    if (GeminiProvider.isApplicable()) {
-                        target = ctx.userQueryElement.querySelector('.query-text');
-                    } else if (ChatGPTProvider.isApplicable()) {
-                        target = ctx.userQueryElement;
-                    }
                 } else if (ctx.type === 'model') {
-                    if (GeminiProvider.isApplicable()) {
-                        sectionHeader = `## ${GeminiProvider.name}\n`;
-                        target = ctx.checkbox.closest('message-content').querySelector('div[id^="model-response-message-content"]');
-                    } else if (ChatGPTProvider.isApplicable()) {
-                        sectionHeader = `## ${ChatGPTProvider.name}\n`;
-                        target = ctx.checkbox.closest('div[data-message-author-role="assistant"]').querySelector('div[class^="markdown"]');
-                    }
+                    sectionHeader = `## ${provider ? provider.name : 'AI'}\n`;
+                }
+
+                if (provider && provider.getMarkdownTarget) {
+                    target = provider.getMarkdownTarget(ctx);
                 }
 
                 if (target) {
@@ -204,21 +183,10 @@
     }
 
     function getFilename() {
-        if (GeminiProvider.isApplicable()) {
-            let div = document.querySelector('.conversation-title');
-            if (div) {
-                return div.textContent;
-            }
-            return GeminiProvider.name;
-        } else if (ChatGPTProvider.isApplicable()) {
-            let div = document.querySelector('a[data-active]');
-            if (div) {
-                return div.textContent;
-            }
-            return ChatGPTProvider.name;
+        if (AppState.currentProvider && AppState.currentProvider.getFilename) {
+            return AppState.currentProvider.getFilename();
         }
-
-        return "";
+        return "Export";
     }
 
     global.CopyActions = CopyActions;

@@ -10,16 +10,10 @@
     };
 
     function manageCheckboxes(type) {
-        let selector = null;
-        if (GeminiProvider.isApplicable()) {
-            selector = type === 'user' 
-                ? 'user-query'
-                : 'message-content';
-        } else if (ChatGPTProvider.isApplicable()) {
-            selector = type === 'user' 
-                ? 'div[data-message-author-role="user"]'
-                : 'div[data-message-author-role="assistant"]';
-        }
+        if (!AppState.currentProvider) return;
+
+        const selector = AppState.currentProvider.selectors[type];
+        if (!selector) return;
 
         const elements = document.querySelectorAll(selector);
 
