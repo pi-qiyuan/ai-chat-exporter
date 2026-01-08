@@ -6,6 +6,22 @@
 
         manageContainerCheckboxes: () => {
             manageCheckboxes('model');
+        },
+
+        toggleSelection: (action) => {
+            const allCheckboxes = document.querySelectorAll('.ace-model-selector');
+
+            if (action === 'all') {
+                allCheckboxes.forEach(c => c.checked = true);
+            } else {
+                allCheckboxes.forEach(c => c.checked = false);
+
+                if (action === 'user') {
+                    document.querySelectorAll('.ace-checkbox-user .ace-model-selector').forEach(c => c.checked = true);
+                } else if (action === 'model') {
+                    document.querySelectorAll('.ace-checkbox-model .ace-model-selector').forEach(c => c.checked = true);
+                }
+            }
         }
     };
 

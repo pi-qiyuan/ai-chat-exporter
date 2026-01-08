@@ -2,7 +2,7 @@
     "name": "__MSG_extensionName__",
     "description": "__MSG_extensionDescription__",
     "default_locale": "en",
-    "version": "1.1.0",
+    "version": "2.0.0",
     "manifest_version": 3,
     "icons": {
         "128": "icon.png"
@@ -12,7 +12,8 @@
             "matches": [
                 "https://gemini.google.com/*",
                 "http://gemini.google.com/*",
-                "https://chatgpt.com/*"
+                "https://chatgpt.com/*",
+                "https://claude.ai/*"
             ],
             "js": [
                 "turndown.js",
@@ -22,6 +23,7 @@
                 "actions/copyactions.js",
                 "providers/gemini.js",
                 "providers/chatgpt.js",
+                "providers/claude.js",
                 "buttoncreator.js",
                 "content.js"
             ],

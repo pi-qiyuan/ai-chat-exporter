@@ -2,6 +2,8 @@ if (window.location.hostname.includes('gemini.google.com')) {
     AppState.currentProvider = GeminiProvider;
 } else if (window.location.hostname.includes('chatgpt.com')) {
     AppState.currentProvider = ChatGPTProvider;
+} else if (window.location.hostname.includes('claude.ai')) {
+    AppState.currentProvider = ClaudeProvider;
 }
 
 document.addEventListener('DOMContentLoaded', () => {

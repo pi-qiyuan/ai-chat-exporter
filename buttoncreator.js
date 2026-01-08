@@ -29,11 +29,15 @@
             </div>
         `;
 
+        const platform = navigator.userAgentData?.platform || navigator.platform;
+        const isMac = /Mac/i.test(platform);
+        const shortcutHint = isMac ? 'Cmd + Shift + E' : 'Ctrl + Shift + E';
+
         const exportButton = document.createElement('div');
         exportButton.className = 'ace-export-button';
         exportButton.innerHTML = `
             <div class="ace-button-group">
-                <button id="main-export-btn" class="ace-my-button">
+                <button id="main-export-btn" class="ace-my-button" title="${shortcutHint}">
                     ${chrome.i18n.getMessage('exportBtn')}
                 </button>
                 <button id="menu-toggle-btn" class="ace-dropdown-toggle">
@@ -90,6 +94,16 @@
         }
     }
 
+    function setupDropdown(toggleBtn, menu) {
+        if (!toggleBtn || !menu) return;
+
+        toggleBtn.addEventListener('click', (event) => {
+            event.stopPropagation();
+            const isShowing = menu.classList.toggle('ace-show');
+            toggleBtn.classList.toggle('ace-show-arrow', isShowing);
+        });
+    }
+
     function initExportModule() {
         const mainBtn = document.getElementById('main-export-btn');
         const toggleBtn = document.getElementById('menu-toggle-btn');
@@ -101,24 +115,13 @@
             CopyActions.handleExport('txt');
         });
 
-        toggleBtn.addEventListener('click', (event) => {
-            event.stopPropagation();
-            const isShowing = menu.classList.toggle('ace-show');
-            toggleBtn.classList.toggle('ace-show-arrow', isShowing);
-        });
+        setupDropdown(toggleBtn, menu);
 
         menu.addEventListener('click', (event) => {
             const target = event.target;
             if (target.classList.contains('ace-menu-item')) {
                 const format = target.getAttribute('data-format');
                 CopyActions.handleExport(format);
-                menu.classList.remove('ace-show');
-                toggleBtn.classList.remove('ace-show-arrow');
-            }
-        });
-
-        window.addEventListener('click', (event) => {
-            if (menu.classList.contains('ace-show') && !menu.contains(event.target)) {
                 menu.classList.remove('ace-show');
                 toggleBtn.classList.remove('ace-show-arrow');
             }
@@ -139,11 +142,7 @@
             Utils.showToast(chrome.i18n.getMessage('noSelection'));
         });
 
-        toggleBtn.addEventListener('click', (event) => {
-            event.stopPropagation();
-            const isShowing = menu.classList.toggle('ace-show');
-            toggleBtn.classList.toggle('ace-show-arrow', isShowing);
-        });
+        setupDropdown(toggleBtn, menu);
 
         menu.addEventListener('click', (event) => {
             const target = event.target.closest('.ace-menu-item');
@@ -155,32 +154,9 @@
                 CheckActions.manageContainerCheckboxes();
 
                 setTimeout(() => {
-                    const allCheckboxes = document.querySelectorAll('.ace-model-selector');
-
-                    if (action === 'all') {
-                        allCheckboxes.forEach(c => c.checked = true);
-                    } else if (action === 'user') {
-                        allCheckboxes.forEach(c => c.checked = false);
-                        document.querySelectorAll('.ace-checkbox-user').forEach(el => {
-                            const checkbox = el.querySelector('.ace-model-selector');
-                            if (checkbox) checkbox.checked = true;
-                        });
-                    } else if (action === 'model') {
-                        allCheckboxes.forEach(c => c.checked = false);
-                        document.querySelectorAll('.ace-checkbox-model').forEach(el => {
-                            const checkbox = el.querySelector('.ace-model-selector');
-                            if (checkbox) checkbox.checked = true;
-                        });
-                    }
+                    CheckActions.toggleSelection(action);
                 }, 50);
 
-                menu.classList.remove('ace-show');
-                toggleBtn.classList.remove('ace-show-arrow');
-            }
-        });
-
-        window.addEventListener('click', (event) => {
-            if (menu.classList.contains('ace-show') && !menu.contains(event.target) && !toggleBtn.contains(event.target)) {
                 menu.classList.remove('ace-show');
                 toggleBtn.classList.remove('ace-show-arrow');
             }
@@ -194,11 +170,7 @@
 
         if (!moreBtn || !menu) return;
 
-        moreBtn.addEventListener('click', (event) => {
-            event.stopPropagation();
-            const isShowing = menu.classList.toggle('ace-show');
-            moreBtn.classList.toggle('ace-show-arrow', isShowing);
-        });
+        setupDropdown(moreBtn, menu);
 
         if (clearHistoryBtn) {
             clearHistoryBtn.addEventListener('click', async () => {
@@ -214,14 +186,26 @@
                 moreBtn.classList.remove('ace-show-arrow');
             });
         }
+    }
 
-        window.addEventListener('click', (event) => {
-            if (menu.classList.contains('ace-show') && !menu.contains(event.target)) {
-                menu.classList.remove('ace-show');
-                moreBtn.classList.remove('ace-show-arrow');
+    window.addEventListener('click', (event) => {
+        const dropdowns = [
+            { menuId: 'export-menu', toggleId: 'menu-toggle-btn' },
+            { menuId: 'select-menu', toggleId: 'select-menu-toggle-btn' },
+            { menuId: 'more-menu', toggleId: 'more-menu-btn' }
+        ];
+
+        dropdowns.forEach(({ menuId, toggleId }) => {
+            const menu = document.getElementById(menuId);
+            const toggleBtn = document.getElementById(toggleId);
+            if (menu && menu.classList.contains('ace-show')) {
+                if (!menu.contains(event.target) && !toggleBtn.contains(event.target)) {
+                    menu.classList.remove('ace-show');
+                    toggleBtn.classList.remove('ace-show-arrow');
+                }
             }
         });
-    }
+    });
 
     global.ButtonCreator = ButtonCreator;
 })(window);

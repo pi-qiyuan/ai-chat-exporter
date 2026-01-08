@@ -4,7 +4,6 @@ form[class*="group/composer"] div[class*="corner-"] {
     border-bottom-right-radius: 0px !important;
 }
 
-
 .ace-export-button {
     border: 0px;
     background: transparent;
@@ -86,14 +85,14 @@ form[class*="group/composer"] div[class*="corner-"] {
     
     opacity: 0;
     transform: translateY(10px); 
-    pointer-events: none;
+    visibility: hidden;
     transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .ace-dropdown-menu.ace-show {
     opacity: 1;
     transform: translateY(0);
-    pointer-events: auto;
+    visibility: visible;
 }
 
 .ace-dropdown-menu li {

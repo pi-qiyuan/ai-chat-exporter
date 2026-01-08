@@ -86,7 +86,7 @@
             return ctx.userQueryElement.textContent;
         } else if (ctx.type === 'model') {
             const nextDiv = ctx.labelTag.nextElementSibling;
-            return nextDiv ? nextDiv.textContent : "";
+            return nextDiv ? Utils.extractText(nextDiv) : "";
         }
         return "";
     }

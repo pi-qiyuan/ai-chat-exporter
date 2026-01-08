@@ -11,7 +11,13 @@
 
         downloadText: (text, filename) => {
             downText(text, filename);
-        }
+        },
+
+        simpleHash: (str) => {
+            return simpleHash(str);
+        },
+
+        extractText: element => extractText(element)
     };
 
     function showToast(message, duration) {
@@ -44,6 +50,58 @@
         a.click();
         document.body.removeChild(a);
         URL.revokeObjectURL(url);
+    }
+
+    function simpleHash(str) {
+        let hash = 0;
+        for (let i = 0; i < str.length; i++) {
+            const char = str.charCodeAt(i);
+            hash = ((hash << 5) - hash) + char;
+            hash |= 0;
+        }
+        return hash.toString(36);
+    }
+
+    function extractText(container) {
+        const rawText = getPerfectPlainText(container);
+
+        return rawText
+            .split('\n')
+            .map(line => line.trim())
+            .filter((line, index, arr) =>
+                line !== '' || (arr[index - 1] !== '' && index > 0)
+            )
+            .join('\n')
+            .trim();
+    }
+
+    function getPerfectPlainText(node) {
+        if (node.nodeType === Node.TEXT_NODE) {
+            return node.textContent.replace(/\s+/g, ' ');
+        }
+
+        if (node.nodeType !== Node.ELEMENT_NODE) {
+            return '';
+        }
+
+        const style = window.getComputedStyle(node);
+        const display = style.display;
+
+        const tagName = node.tagName.toUpperCase();
+        if (tagName === 'BR') return '\n';
+        if (['SCRIPT', 'STYLE'].includes(tagName)) return '';
+
+        const childrenText = Array.from(node.childNodes)
+            .map(child => getPerfectPlainText(child))
+            .join('');
+
+        const isBlock = !display.includes('inline') && display !== 'contents';
+
+        if (isBlock) {
+            return `\n${childrenText}\n`;
+        }
+
+        return childrenText;
     }
 
     global.Utils = Utils;
