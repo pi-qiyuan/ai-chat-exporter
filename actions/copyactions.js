@@ -156,6 +156,45 @@
             }
         });
 
+        turndownService.addRule('table-cell', {
+            filter: ['th', 'td'],
+            replacement: function (content) {
+                return ' ' + content.replace(/\n/g, '<br>').trim() + ' |';
+            }
+        });
+
+        turndownService.addRule('table-row', {
+            filter: ['tr'],
+            replacement: function (content) {
+                return '|' + content.trim() + '\n';
+            }
+        });
+
+        turndownService.addRule('table-custom', {
+            filter: 'table',
+            replacement: function (content, node) {
+                const rows = Array.from(node.rows);
+                if (rows.length === 0) return '';
+
+                const columnCount = rows[0].cells.length;
+                let delimiterRow = '|';
+                for (let i = 0; i < columnCount; i++) {
+                    delimiterRow += ' --- |';
+                }
+
+                const lines = content.trim().split('\n').filter(l => l.trim() !== '');
+
+                const header = lines[0];
+                const body = lines.slice(1).join('\n');
+
+                return '\n\n' + 
+                    header + '\n' + 
+                    delimiterRow + 
+                    (body ? '\n' + body : '') + 
+                    '\n\n';
+            }
+        });
+
         await processExport(selectedCheckboxes, {
             extension: 'md',
             formatItem: (ctx) => {

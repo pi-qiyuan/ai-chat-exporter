@@ -84,31 +84,58 @@
     function getTextContentInternal(ctx) {
         if (ctx.type === 'user') {
             return ctx.userQueryElement.textContent;
-        } else if (ctx.type === 'model') {
-            const nextDiv = ctx.labelTag.nextElementSibling;
-            return nextDiv ? Utils.extractText(nextDiv) : "";
+        } 
+
+        if (ctx.type !== 'model') {
+            return "";
         }
-        return "";
+
+        const nextDiv = ctx.labelTag.nextElementSibling;
+        if (!nextDiv) {
+            return "";
+        }
+
+        const footers = nextDiv.querySelectorAll('.table-footer.hide-from-message-actions');
+        const hiddenElements = [];
+
+        footers.forEach(el => {
+            hiddenElements.push({ el, originalDisplay: el.style.display });
+            el.style.display = 'none';
+        });
+
+        let text = "";
+        try {
+            text = Utils.extractText(nextDiv);
+        } finally {
+            hiddenElements.forEach(item => {
+                item.el.style.display = item.originalDisplay;
+            });
+        }
+        return text;
     }
 
     function getMarkdownTargetInternal(ctx) {
         if (ctx.type === 'user') {
             return ctx.userQueryElement.querySelector('.query-text');
-        } else if (ctx.type === 'model') {
-            return ctx.checkbox.closest('message-content').querySelector('div[id^="model-response-message-content"]');
+        } 
+
+        if (ctx.type === 'model') {
+            const target = ctx.checkbox.closest('message-content').querySelector('div[id^="model-response-message-content"]');
+            if (target) {
+                const clone = target.cloneNode(true);
+                clone.querySelectorAll('.table-footer.hide-from-message-actions').forEach(el => el.remove());
+                return clone;
+            }
         }
         return null;
     }
 
     function getCodeLanguageInternal(node) {
         let parent = node.closest('code-block');
-        if (parent) {
-             let codeDecoration = parent.querySelector('.code-block-decoration');
-             if (codeDecoration) {
-                 return codeDecoration.textContent;
-             }
-        }
-        return '';
+        if (!parent) return '';
+
+        let codeDecoration = parent.querySelector('.code-block-decoration');
+        return codeDecoration ? codeDecoration.textContent : '';
     }
 
     global.GeminiProvider = GeminiProvider;

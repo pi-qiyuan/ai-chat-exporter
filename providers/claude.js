@@ -58,10 +58,13 @@
     function getTextContentInternal(ctx) {
         if (ctx.type === 'user') {
             return ctx.userQueryElement.textContent;
-        } else if (ctx.type === 'model') {
+        } 
+
+        if (ctx.type === 'model') {
             const nextDiv = ctx.labelTag.nextElementSibling;
             return nextDiv ? nextDiv.textContent : "";
         }
+
         return "";
     }
 
@@ -76,15 +79,16 @@
 
     function getCodeLanguageInternal(node) {
         const pre = node.closest('pre');
-        if (pre) {
-            const preContainer = pre.parentElement;
-            if (preContainer) {
-                const langLabel = preContainer.previousElementSibling;
-                if (langLabel && langLabel.classList.contains('text-text-500')) {
-                    return langLabel.textContent.trim();
-                }
-            }
+        if (!pre) return '';
+
+        const preContainer = pre.parentElement;
+        if (!preContainer) return '';
+
+        const langLabel = preContainer.previousElementSibling;
+        if (langLabel && langLabel.classList.contains('text-text-500')) {
+            return langLabel.textContent.trim();
         }
+
         return '';
     }
 

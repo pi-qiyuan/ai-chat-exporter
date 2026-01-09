@@ -51,10 +51,13 @@
     function getTextContentInternal(ctx) {
         if (ctx.type === 'user') {
             return ctx.userQueryElement.textContent;
-        } else if (ctx.type === 'model') {
+        } 
+
+        if (ctx.type === 'model') {
             const nextDiv = ctx.labelTag.nextElementSibling;
             return nextDiv ? nextDiv.textContent : "";
         }
+
         return "";
     }
 
@@ -69,13 +72,10 @@
 
     function getCodeLanguageInternal(node) {
         const codeDiv = node.querySelector('code[class*="whitespace-pre!"][class*="language-"]');
-        if (codeDiv) {
-            const langClass = Array.from(codeDiv.classList).find(c => c.startsWith('language-'));
-            if (langClass) {
-                return langClass.replace('language-', '');
-            }
-        }
-        return '';
+        if (!codeDiv) return '';
+
+        const langClass = Array.from(codeDiv.classList).find(c => c.startsWith('language-'));
+        return langClass ? langClass.replace('language-', '') : '';
     }
 
     global.ChatGPTProvider = ChatGPTProvider;

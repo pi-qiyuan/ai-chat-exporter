@@ -87,6 +87,8 @@
         const style = window.getComputedStyle(node);
         const display = style.display;
 
+        if (display === 'none') return '';
+
         const tagName = node.tagName.toUpperCase();
         if (tagName === 'BR') return '\n';
         if (['SCRIPT', 'STYLE'].includes(tagName)) return '';
@@ -94,6 +96,14 @@
         const childrenText = Array.from(node.childNodes)
             .map(child => getPerfectPlainText(child))
             .join('');
+
+        if (display === 'table-cell' || tagName === 'TD' || tagName === 'TH') {
+            return childrenText.trim() + ' '; 
+        }
+
+        if (display === 'table-row' || tagName === 'TR') {
+            return '\n' + childrenText.trim() + '\n';
+        }
 
         const isBlock = !display.includes('inline') && display !== 'contents';
 
