@@ -1,6 +1,6 @@
 {
   "extensionName": { "message": "AI 채팅 내보내기" },
-  "extensionDescription": { "message": "Gemini 대화를 Markdown 또는 텍스트로 내보내는 경량 브라우저 확장 프로그램입니다." },
+  "extensionDescription": { "message": "AI 대화를 Markdown 또는 텍스트로 내보내는 경량 브라우저 확장 프로그램입니다." },
   "selectBtn": { "message": "메시지 선택" },
   "exportBtn": { "message": "선택한 항목 내보내기" },
   "exportAsText": { "message": "TXT로 저장" },
@@ -14,8 +14,13 @@
   "moreBtn": { "message": "더보기" },
   "privacyPolicy": { "message": "개인정보 처리방침" },
   "feedback": { "message": "피드백" },
-  "donate": { "message": "문의하기" },
+  "sponsor": { "message": "커피 한 잔 사주기" },
+  "contact": { "message": "문의하기" },
   "clearHistory": { "message": "내보내기 기록 삭제" },
   "historyCleared": { "message": "내보내기 기록이 삭제되었습니다" },
-  "exportedTag": { "message": "(내보냄)" }
+  "exportedTag": { "message": "(내보냄)" },
+  "exportFooter": { "message": "$2에 $1에 의해 $3 대화에서 내보내졌습니다" },
+  "smartCopy": { "message": "스마트 복사" },
+  "copied": { "message": "복사됨" },
+  "copySuccess": { "message": "복사 성공! 이제 Notion, Word에 붙여넣을 수 있습니다" }
 }

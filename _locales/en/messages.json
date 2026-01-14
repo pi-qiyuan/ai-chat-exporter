@@ -4,7 +4,7 @@
     "description": "Name of the extension"
   },
   "extensionDescription": {
-    "message": "Export Gemini conversations to Markdown or Text with one click. Supports selective export and preserves formatting.",
+    "message": "Export AI conversations to Markdown or Text with one click. Supports selective export and preserves formatting.",
     "description": "Description of the extension"
   },
   "selectBtn": { "message": "Select Messages" },
@@ -20,8 +20,13 @@
   "moreBtn": { "message": "More" },
   "privacyPolicy": { "message": "Privacy Policy" },
   "feedback": { "message": "Feedback" },
-  "donate": { "message": "Contact Us" },
+  "sponsor": { "message": "Buy me a coffee" },
+  "contact": { "message": "Contact Us" },
   "clearHistory": { "message": "Clear Export History" },
   "historyCleared": { "message": "Export history cleared" },
-  "exportedTag": { "message": "(Exported)" }
+  "exportedTag": { "message": "(Exported)" },
+  "exportFooter": { "message": "Exported by $1 on $2 from $3 conversation" },
+  "smartCopy": { "message": "Smart Copy" },
+  "copied": { "message": "Copied" },
+  "copySuccess": { "message": "Copy successful! Now you can paste in Notion, Word" }
 }

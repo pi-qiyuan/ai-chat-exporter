@@ -15,20 +15,21 @@
             return;
         }
 
-        if (format == 'md') {
+        if (format === 'clipboard') {
+            exportToClipboard(selectedCheckboxes);
+        } else if (format === 'md') {
             exportAsMarkdown(selectedCheckboxes);
         } else {
             exportAsText(selectedCheckboxes);
         }
     }
 
-    async function processExport(selectedCheckboxes, options) {
-        const { extension, formatItem } = options;
-
-        let finalContent = "";
+    async function runExportSequence(selectedCheckboxes, itemProcessor, postProcessor) {
         const chatIdsToSave = {};
         const provider = AppState.currentProvider;
         if (!provider) return;
+
+        let hasContent = false;
 
         try {
             for (const checkbox of selectedCheckboxes) {
@@ -71,9 +72,9 @@
                     type
                 };
 
-                const itemContent = formatItem(context);
-                if (itemContent) {
-                    finalContent += itemContent;
+                const result = await itemProcessor(context);
+                if (result) {
+                    hasContent = true;
                 }
             }
 
@@ -92,12 +93,41 @@
                 }
             }
 
-            if (finalContent) {
-                Utils.downloadText(finalContent, getFilename() + "." + extension);
+            if (hasContent && postProcessor) {
+                await postProcessor();
                 selectedCheckboxes.forEach(cb => cb.checked = false);
             }
         } catch (error) {
+            console.error("Export sequence failed:", error);
+            Utils.showToast("Export failed: " + error.message);
         }
+    }
+
+    async function processExport(selectedCheckboxes, options) {
+        const { extension, formatItem } = options;
+        let finalContent = "";
+
+        await runExportSequence(
+            selectedCheckboxes,
+            async (context) => {
+                const itemContent = formatItem(context);
+                if (itemContent) {
+                    finalContent += itemContent;
+                    return true;
+                }
+                return false;
+            },
+            async () => {
+                const timestamp = new Date().toLocaleString();
+                const appName = chrome.i18n.getMessage("extensionName");
+                const modelName = AppState.currentProvider ? AppState.currentProvider.name : 'AI';
+                const footerText = chrome.i18n.getMessage("exportFooter", [appName, timestamp, modelName]);
+
+                finalContent += '\n\n---\n' + footerText + '\n';
+
+                Utils.downloadText(finalContent, getFilename() + "." + extension);
+            }
+        );
     }
 
     async function exportAsText(selectedCheckboxes) {
@@ -120,14 +150,14 @@
                 }
 
                 if (typeName && text) {
-                    return `${typeName}\n${text}\n\n`;
+                    return `${typeName}\n${text}\n\n---------------------------------------------\n\n`;
                 }
                 return "";
             }
         });
     }
 
-    async function exportAsMarkdown(selectedCheckboxes) {
+    function createTurndownService() {
         const turndownService = new TurndownService({
             headingStyle: 'atx',
             codeBlockStyle: 'fenced'
@@ -195,6 +225,12 @@
             }
         });
 
+        return turndownService;
+    }
+
+    async function exportAsMarkdown(selectedCheckboxes) {
+        const turndownService = createTurndownService();
+
         await processExport(selectedCheckboxes, {
             extension: 'md',
             formatItem: (ctx) => {
@@ -214,11 +250,74 @@
 
                 if (target) {
                     let md = turndownService.turndown(target.innerHTML);
-                    return `${sectionHeader}${md}\n\n`;
+                    return `${sectionHeader}${md}\n\n---\n`;
                 }
                 return "";
             }
         });
+    }
+
+    async function exportToClipboard(selectedCheckboxes) {
+        const turndownService = createTurndownService();
+        const provider = AppState.currentProvider;
+        
+        let fullHtml = "";
+        let fullMarkdown = "";
+
+        await runExportSequence(
+            selectedCheckboxes,
+            async (context) => {
+                let target = null;
+                if (provider.getMarkdownTarget) {
+                    target = provider.getMarkdownTarget(context);
+                }
+
+                if (target) {
+                    let mdHeader = "";
+                    let htmlHeader = "";
+                    
+                    if (context.type === 'user') {
+                        const headerText = chrome.i18n.getMessage("userHeader");
+                        mdHeader = `## ${headerText}\n`;
+                        htmlHeader = `<h2>${headerText}</h2>`;
+                    } else if (context.type === 'model') {
+                        const headerText = provider.name || 'AI';
+                        mdHeader = `## ${headerText}\n`;
+                        htmlHeader = `<h2>${headerText}</h2>`;
+                    }
+
+                    fullHtml += `${htmlHeader}\n${target.innerHTML}\n<hr>\n`;
+                    
+                    const md = turndownService.turndown(target.innerHTML);
+                    fullMarkdown += `${mdHeader}${md}\n\n---\n`;
+                    return true;
+                }
+                return false;
+            },
+            async () => {
+                const timestamp = new Date().toLocaleString();
+                const appName = chrome.i18n.getMessage("extensionName");
+                const modelName = AppState.currentProvider ? AppState.currentProvider.name : 'AI';
+                const footerText = chrome.i18n.getMessage("exportFooter", [appName, timestamp, modelName]);
+
+                if (footerText) {
+                    fullHtml += `<br><hr><p>${footerText}</p>`;
+                    fullMarkdown += `\n\n---\n${footerText}\n`;
+                }
+
+                const blobHtml = new Blob([fullHtml], { type: "text/html" });
+                const blobText = new Blob([fullMarkdown], { type: "text/plain" });
+                
+                const data = [new ClipboardItem({
+                    ["text/html"]: blobHtml,
+                    ["text/plain"]: blobText,
+                })];
+
+                await navigator.clipboard.write(data);
+                window.dispatchEvent(new CustomEvent('ace-copy-success'));
+                Utils.showToast(chrome.i18n.getMessage("copySuccess"), 5000);
+            }
+        );
     }
 
     function getFilename() {

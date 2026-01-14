@@ -1,6 +1,6 @@
 {
   "extensionName": { "message": "Exportateur de Chat IA" },
-  "extensionDescription": { "message": "Une extension de navigateur légère pour exporter les conversations Gemini en Markdown ou en texte." },
+  "extensionDescription": { "message": "Une extension de navigateur légère pour exporter les conversations IA en Markdown ou en texte." },
   "selectBtn": { "message": "Sélect. messages" },
   "exportBtn": { "message": "Exporter la sélection" },
   "exportAsText": { "message": "Exporter en TXT" },
@@ -14,8 +14,13 @@
   "moreBtn": { "message": "Plus" },
   "privacyPolicy": { "message": "Politique de confidentialité" },
   "feedback": { "message": "Retour" },
-  "donate": { "message": "Contactez-nous" },
+  "sponsor": { "message": "Offrez-moi un café" },
+  "contact": { "message": "Contactez-nous" },
   "clearHistory": { "message": "Effacer l'historique d'exportation" },
   "historyCleared": { "message": "Historique d'exportation effacé" },
-  "exportedTag": { "message": "(Exporté)" }
+  "exportedTag": { "message": "(Exporté)" },
+  "exportFooter": { "message": "Exporté par $1 le $2 depuis la conversation $3" },
+  "smartCopy": { "message": "Copie Intelligente" },
+  "copied": { "message": "Copié" },
+  "copySuccess": { "message": "Copie réussie ! Vous pouvez maintenant coller dans Notion, Word" }
 }

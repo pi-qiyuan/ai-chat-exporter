@@ -1,6 +1,6 @@
 {
   "extensionName": { "message": "AIチャットエクスポート" },
-  "extensionDescription": { "message": "Geminiの会話をMarkdownまたはテキスト形式で書き出す軽量なブラウザ拡張機能。" },
+  "extensionDescription": { "message": "AIの会話をMarkdownまたはテキスト形式で書き出す軽量なブラウザ拡張機能。" },
   "selectBtn": { "message": "メッセージを選択" },
   "exportBtn": { "message": "選択した内容を書き出し" },
   "exportAsText": { "message": "TXT形式で保存" },
@@ -14,8 +14,13 @@
   "moreBtn": { "message": "その他" },
   "privacyPolicy": { "message": "プライバシーポリシー" },
   "feedback": { "message": "フィードバック" },
-  "donate": { "message": "お問い合わせ" },
+  "sponsor": { "message": "コーヒーを奢る" },
+  "contact": { "message": "お問い合わせ" },
   "clearHistory": { "message": "エクスポート履歴をクリア" },
   "historyCleared": { "message": "エクスポート履歴がクリアされました" },
-  "exportedTag": { "message": "(エクスポート済み)" }
+  "exportedTag": { "message": "(エクスポート済み)" },
+  "exportFooter": { "message": "$2 に $1 によって $3 の会話からエクスポートされました" },
+  "smartCopy": { "message": "スマートコピー" },
+  "copied": { "message": "コピーしました" },
+  "copySuccess": { "message": "コピー成功！NotionやWordに貼り付けられます" }
 }

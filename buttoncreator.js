@@ -47,6 +47,7 @@
                 <ul id="export-menu" class="ace-dropdown-menu">
                     <li class="ace-menu-item" data-format="txt">${chrome.i18n.getMessage('exportAsText')}</li>
                     <li class="ace-menu-item" data-format="md">${chrome.i18n.getMessage('exportAsMarkdown')}</li>
+                    <li class="ace-menu-item" data-format="clipboard">${chrome.i18n.getMessage('smartCopy')}</li>
                 </ul>
             </div>
         `;
@@ -66,18 +67,23 @@
                         </span>
                     </li>
                     <li class="ace-menu-item">
-                        <a href="https://github.com/pi-qiyuan/ai-chat-exporter/blob/main/PRIVACY.md" target="_blank" class="ace-menu-link">
-                            ${chrome.i18n.getMessage('privacyPolicy')}
+                        <a href="https://ko-fi.com/qiyuanyang" target="_blank" class="ace-menu-link">
+                            ❤️ ${chrome.i18n.getMessage('sponsor')}
                         </a>
                     </li>
                     <li class="ace-menu-item">
-                        <a href="https://github.com/pi-qiyuan/ai-chat-exporter/issues" target="_blank" class="ace-menu-link">
+                        <a href="https://github.com/pi-qiyuan/ai-chat-exporter/issues/new" target="_blank" class="ace-menu-link">
                             ${chrome.i18n.getMessage('feedback')}
                         </a>
                     </li>
                     <li class="ace-menu-item">
                         <a href="https://github.com/pi-qiyuan/ai-chat-exporter" target="_blank" class="ace-menu-link">
-                            ${chrome.i18n.getMessage('donate')}
+                            ${chrome.i18n.getMessage('contact')}
+                        </a>
+                    </li>
+                    <li class="ace-menu-item">
+                        <a href="https://github.com/pi-qiyuan/ai-chat-exporter/blob/main/PRIVACY.md" target="_blank" class="ace-menu-link">
+                            ${chrome.i18n.getMessage('privacyPolicy')}
                         </a>
                     </li>
                 </ul>
@@ -99,6 +105,25 @@
 
         toggleBtn.addEventListener('click', (event) => {
             event.stopPropagation();
+
+            const allDropdowns = [
+                { menuId: 'export-menu', toggleId: 'menu-toggle-btn' },
+                { menuId: 'select-menu', toggleId: 'select-menu-toggle-btn' },
+                { menuId: 'more-menu', toggleId: 'more-menu-btn' }
+            ];
+
+            allDropdowns.forEach(({ menuId, toggleId }) => {
+                const otherMenu = document.getElementById(menuId);
+                const otherToggle = document.getElementById(toggleId);
+                
+                if (otherMenu && otherMenu !== menu) {
+                    otherMenu.classList.remove('ace-show');
+                }
+                if (otherToggle && otherToggle !== toggleBtn) {
+                    otherToggle.classList.remove('ace-show-arrow');
+                }
+            });
+
             const isShowing = menu.classList.toggle('ace-show');
             toggleBtn.classList.toggle('ace-show-arrow', isShowing);
         });
@@ -122,8 +147,26 @@
             if (target.classList.contains('ace-menu-item')) {
                 const format = target.getAttribute('data-format');
                 CopyActions.handleExport(format);
-                menu.classList.remove('ace-show');
-                toggleBtn.classList.remove('ace-show-arrow');
+                if (format === 'clipboard') {
+                    setTimeout(() => {
+                        menu.classList.remove('ace-show');
+                        toggleBtn.classList.remove('ace-show-arrow');
+                    }, 2000);
+                } else {
+                    menu.classList.remove('ace-show');
+                    toggleBtn.classList.remove('ace-show-arrow');
+                }
+            }
+        });
+
+        window.addEventListener('ace-copy-success', () => {
+            const copyBtn = menu.querySelector('[data-format="clipboard"]');
+            if (copyBtn) {
+                const originalText = copyBtn.innerText;
+                copyBtn.innerText = "✅ " + chrome.i18n.getMessage('copied');
+                setTimeout(() => {
+                    copyBtn.innerText = originalText;
+                }, 2000);
             }
         });
     }

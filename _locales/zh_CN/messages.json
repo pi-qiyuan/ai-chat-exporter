@@ -1,6 +1,6 @@
 {
   "extensionName": { "message": "AI 聊天导出助手" },
-  "extensionDescription": { "message": "一款轻量级浏览器扩展，可将 Gemini 对话导出为 Markdown 或文本格式。" },
+  "extensionDescription": { "message": "一款轻量级浏览器扩展，可将 AI 对话导出为 Markdown 或文本格式。" },
   "selectBtn": { "message": "选择对话" },
   "exportBtn": { "message": "导出已选内容" },
   "exportAsText": { "message": "导出为 TXT" },
@@ -14,8 +14,13 @@
   "moreBtn": { "message": "更多" },
   "privacyPolicy": { "message": "隐私声明" },
   "feedback": { "message": "反馈" },
-  "donate": { "message": "联系我们" },
+  "sponsor": { "message": "请我喝杯咖啡" },
+  "contact": { "message": "联系我们" },
   "clearHistory": { "message": "清除导出记录" },
   "historyCleared": { "message": "导出记录已清除" },
-  "exportedTag": { "message": "(已导出)" }
+  "exportedTag": { "message": "(已导出)" },
+  "exportFooter": { "message": "由 $1 于 $2 导出自 $3 对话" },
+  "smartCopy": { "message": "智能复制" },
+  "copied": { "message": "已复制" },
+  "copySuccess": { "message": "复制成功！现在可以去Notion，Word粘贴了" }
 }
