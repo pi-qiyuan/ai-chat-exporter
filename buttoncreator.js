@@ -191,7 +191,7 @@
             const target = event.target.closest('.ace-menu-item');
             if (target) {
                 const action = target.getAttribute('data-action');
-                
+
                 AppState.inSelectMode = true;
                 CheckActions.manageUserQueryCheckboxes();
                 CheckActions.manageContainerCheckboxes();

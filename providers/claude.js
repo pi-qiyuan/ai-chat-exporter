@@ -34,7 +34,7 @@
         return false;
     }
 
-    function generateChatIdInternal (item, type) {
+    function generateChatIdInternal(item, type) {
         const text = item.textContent ? item.textContent.trim() : "";
 
         if (!text) {
@@ -61,8 +61,11 @@
         } 
 
         if (ctx.type === 'model') {
-            const nextDiv = ctx.labelTag.nextElementSibling;
-            return nextDiv ? nextDiv.textContent : "";
+            const children = Array.from(ctx.labelTag.parentElement.children);
+            return children
+                .slice(1) 
+                .map(child => child.textContent.trim())
+                .join('\n\n');
         }
 
         return "";
@@ -72,7 +75,17 @@
         if (ctx.type === 'user') {
             return ctx.userQueryElement;
         } else if (ctx.type === 'model') {
-            return ctx.messageContentWrapper.querySelector(".standard-markdown");
+            const markdowns = ctx.messageContentWrapper.querySelectorAll(".standard-markdown");
+            if (markdowns.length === 0) return null;
+
+            const container = document.createElement("div");
+            container.className = "markdown-wrapper-container";
+
+            markdowns.forEach(el => {
+                container.appendChild(el.cloneNode(true));
+            });
+
+            return container;
         }
         return null;
     }
