@@ -43,7 +43,7 @@
     function getFilenameInternal() {
         let div = document.querySelector('a[data-active]');
         if (div) {
-            return div.textContent;
+            return div.textContent.trim();
         }
         return ChatGPTProvider.name;
     }

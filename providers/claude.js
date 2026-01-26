@@ -52,7 +52,7 @@
         if (titleBtn) {
             return titleBtn.textContent.trim();
         }
-        return "Claude Chat";
+        return ClaudeProvider.name;
     }
 
     function getTextContentInternal(ctx) {

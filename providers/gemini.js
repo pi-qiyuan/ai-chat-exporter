@@ -76,7 +76,7 @@
     function getFilenameInternal() {
         let div = document.querySelector('.conversation-title');
         if (div) {
-            return div.textContent;
+            return div.textContent.trim();
         }
         return GeminiProvider.name;
     }
