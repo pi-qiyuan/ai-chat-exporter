@@ -22,5 +22,8 @@
   "exportFooter": { "message": "Exportado por $1 el $2 de la conversación de $3" },
   "smartCopy": { "message": "Copia Inteligente" },
   "copied": { "message": "Copiado" },
-  "copySuccess": { "message": "¡Copia exitosa! Ahora puedes pegar en Notion, Word" }
+  "copySuccess": { "message": "¡Copia exitosa! Ahora puedes pegar en Notion, Word" },
+  "supportedTip": { "message": "Haz clic en 'Seleccionar mensajes' cerca del área de chat para comenzar." },
+  "unsupportedTip": { "message": "Abre ChatGPT, Claude o Gemini para empezar a usar la herramienta." },
+  "shortcutTip": { "message": "Atajo: Ctrl + Shift + E (Cmd + Shift + E en Mac) para exportar rápidamente." }
 }

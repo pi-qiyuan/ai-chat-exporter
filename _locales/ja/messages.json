@@ -22,5 +22,8 @@
   "exportFooter": { "message": "$2 に $1 によって $3 の会話からエクスポートされました" },
   "smartCopy": { "message": "スマートコピー" },
   "copied": { "message": "コピーしました" },
-  "copySuccess": { "message": "コピー成功！NotionやWordに貼り付けられます" }
+  "copySuccess": { "message": "コピー成功！NotionやWordに貼り付けられます" },
+  "supportedTip": { "message": "チャット入力エリアの近くにある「メッセージを選択」をクリックして開始できます。" },
+  "unsupportedTip": { "message": "ツールを使用するには、ChatGPT、Claude、またはGeminiを開いてください。" },
+  "shortcutTip": { "message": "ショートカットキー：Ctrl + Shift + E (MacはCmd + Shift + E) で素早くエクスポートできます。" }
 }

@@ -22,5 +22,8 @@
   "exportFooter": { "message": "$2에 $1에 의해 $3 대화에서 내보내졌습니다" },
   "smartCopy": { "message": "스마트 복사" },
   "copied": { "message": "복사됨" },
-  "copySuccess": { "message": "복사 성공! 이제 Notion, Word에 붙여넣을 수 있습니다" }
+  "copySuccess": { "message": "복사 성공! 이제 Notion, Word에 붙여넣을 수 있습니다" },
+  "supportedTip": { "message": "채팅 입력창 근처의 '메시지 선택'을 클릭하여 시작할 수 있습니다." },
+  "unsupportedTip": { "message": "도구를 사용하려면 ChatGPT, Claude 또는 Gemini를 여세요." },
+  "shortcutTip": { "message": "단축키: Ctrl + Shift + E (Mac은 Cmd + Shift + E)를 눌러 빠르게 내보낼 수 있습니다." }
 }

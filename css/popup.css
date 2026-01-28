@@ -1,0 +1,110 @@
+body {
+    width: 300px;
+    margin: 0;
+    padding: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    color: #333;
+    background-color: #f9f9f9;
+}
+
+.container {
+    padding: 20px;
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.logo {
+    width: 32px;
+    height: 32px;
+    margin-right: 12px;
+}
+
+h1 {
+    font-size: 18px;
+    margin: 0;
+    color: #1a1a1a;
+}
+
+.description {
+    font-size: 13px;
+    line-height: 1.5;
+    color: #666;
+    margin-bottom: 20px;
+}
+
+.tip-card {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    background-color: #e3f2fd;
+    border-radius: 8px;
+    padding: 12px;
+    margin-bottom: 20px;
+    border-left: 4px solid #2196f3;
+}
+
+.tip-icon {
+    font-size: 16px;
+    margin-top: -1px;
+}
+
+.tip-content {
+    flex: 1;
+}
+
+.tip-card p {
+    margin: 0;
+    font-size: 13px;
+    color: #1976d2;
+    line-height: 1.4;
+}
+
+.tip-card.warning {
+    background-color: #fff3e0;
+    border-left-color: #ff9800;
+}
+
+.tip-card.warning p {
+    color: #e65100;
+}
+
+.menu {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.menu-item {
+    display: flex;
+    align-items: center;
+    padding: 10px 12px;
+    text-decoration: none;
+    color: #444;
+    background-color: #fff;
+    border: 1px solid #eee;
+    border-radius: 8px;
+    font-size: 14px;
+    transition: all 0.2s ease;
+}
+
+.menu-item:hover {
+    background-color: #f0f0f0;
+    border-color: #ddd;
+    transform: translateY(-1px);
+}
+
+.footer {
+    margin-top: 20px;
+    padding-top: 15px;
+    border-top: 1px solid #eee;
+    text-align: center;
+}
+
+#version {
+    font-size: 12px;
+    color: #999;
+}

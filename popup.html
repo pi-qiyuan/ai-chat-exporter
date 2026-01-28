@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="css/popup.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <img src="icon.png" alt="logo" class="logo">
+            <h1 data-i18n="extensionName">AI Chat Exporter</h1>
+        </div>
+        <p class="description" data-i18n="extensionDescription">Export AI conversations to Markdown or Text with one click.</p>
+
+        <div id="smart-tip" class="tip-card info">
+            <div class="tip-icon">💡</div>
+            <div class="tip-content">
+                <p id="tip-text"></p>
+            </div>
+        </div>
+
+        <div id="shortcut-tip" class="tip-card info" style="display: none; background-color: #f3e5f5; border-left-color: #9c27b0; margin-top: -10px;">
+            <div class="tip-icon">⌨️</div>
+            <div class="tip-content">
+                <p id="shortcut-text" style="color: #7b1fa2;"></p>
+            </div>
+        </div>
+
+        <div class="menu">
+            <a href="https://github.com/pi-qiyuan/ai-chat-exporter/issues" target="_blank" class="menu-item">
+                <span data-i18n="feedback">Feedback</span>
+            </a>
+            <a href="https://ko-fi.com/qiyuanyang" target="_blank" class="menu-item">
+                <span data-i18n="sponsor">Buy me a coffee</span>
+            </a>
+            <a href="https://github.com/pi-qiyuan/ai-chat-exporter" target="_blank" class="menu-item">
+                <span data-i18n="contact">Contact Us</span>
+            </a>
+        </div>
+
+        <div class="footer">
+            <span id="version">v2.1.0</span>
+        </div>
+    </div>
+    <script src="popup.js"></script>
+</body>
+</html>

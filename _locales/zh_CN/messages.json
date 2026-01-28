@@ -22,5 +22,8 @@
   "exportFooter": { "message": "由 $1 于 $2 导出自 $3 对话" },
   "smartCopy": { "message": "智能复制" },
   "copied": { "message": "已复制" },
-  "copySuccess": { "message": "复制成功！现在可以去Notion，Word粘贴了" }
+  "copySuccess": { "message": "复制成功！现在可以去Notion，Word粘贴了" },
+  "supportedTip": { "message": "你可以点击聊天输入框附近出现的“选择对话”按钮开始使用。" },
+  "unsupportedTip": { "message": "请打开 ChatGPT、Claude 或 Gemini 页面开始使用该工具。" },
+  "shortcutTip": { "message": "快捷键：Ctrl + Shift + E (Mac 为 Cmd + Shift + E) 可快速导出。" }
 }
