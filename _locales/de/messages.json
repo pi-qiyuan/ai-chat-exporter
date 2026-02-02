@@ -25,5 +25,8 @@
   "copySuccess": { "message": "Kopieren erfolgreich! Jetzt in Notion oder Word einfügen" },
   "supportedTip": { "message": "Klicken Sie auf 'Nachrichten auswählen' im Chat-Eingabebereich, um zu beginnen." },
   "unsupportedTip": { "message": "Öffnen Sie ChatGPT, Claude oder Gemini, um das Tool zu verwenden." },
-  "shortcutTip": { "message": "Tastenkombination: Strg + Umschalt + E (Cmd + Umschalt + E auf dem Mac) für schnellen Export." }
+  "shortcutTip": { "message": "Tastenkombination: Strg + Umschalt + E (Cmd + Umschalt + E auf dem Mac) für schnellen Export." },
+  "enterFilename": { "message": "Dateinamen eingeben" },
+  "cancel": { "message": "Abbrechen" },
+  "confirm": { "message": "Herunterladen" }
 }

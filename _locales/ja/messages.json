@@ -25,5 +25,8 @@
   "copySuccess": { "message": "コピー成功！NotionやWordに貼り付けられます" },
   "supportedTip": { "message": "チャット入力エリアの近くにある「メッセージを選択」をクリックして開始できます。" },
   "unsupportedTip": { "message": "ツールを使用するには、ChatGPT、Claude、またはGeminiを開いてください。" },
-  "shortcutTip": { "message": "ショートカットキー：Ctrl + Shift + E (MacはCmd + Shift + E) で素早くエクスポートできます。" }
+  "shortcutTip": { "message": "ショートカットキー：Ctrl + Shift + E (MacはCmd + Shift + E) で素早くエクスポートできます。" },
+  "enterFilename": { "message": "ファイル名を入力してください" },
+  "cancel": { "message": "キャンセル" },
+  "confirm": { "message": "ダウンロード" }
 }

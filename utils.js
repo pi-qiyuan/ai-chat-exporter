@@ -17,7 +17,11 @@
             return simpleHash(str);
         },
 
-        extractText: element => extractText(element)
+        extractText: element => extractText(element),
+
+        showFilenamePrompt: (defaultName, onConfirm) => {
+            showFilenamePrompt(defaultName, onConfirm);
+        }
     };
 
     function showToast(message, duration) {
@@ -38,6 +42,88 @@
                 }
             }, 300);
         }, duration);
+    }
+
+    function showFilenamePrompt(defaultName, onConfirm) {
+        // Create Overlay
+        const overlay = document.createElement('div');
+        overlay.className = 'ace-modal-overlay';
+        
+        // Create Modal Box
+        const modalBox = document.createElement('div');
+        modalBox.className = 'ace-modal-box';
+        
+        // Title
+        const title = document.createElement('div');
+        title.className = 'ace-modal-title';
+        title.textContent = chrome.i18n.getMessage("enterFilename") || "Enter Filename"; // Fallback if key missing
+        
+        // Input
+        const input = document.createElement('input');
+        input.type = 'text';
+        input.className = 'ace-modal-input';
+        input.value = defaultName;
+        
+        // Button Container
+        const btnContainer = document.createElement('div');
+        btnContainer.className = 'ace-modal-buttons';
+        
+        // Cancel Button
+        const cancelBtn = document.createElement('button');
+        cancelBtn.className = 'ace-modal-btn ace-modal-btn-secondary';
+        cancelBtn.textContent = chrome.i18n.getMessage("cancel") || "Cancel";
+        
+        // Confirm Button
+        const confirmBtn = document.createElement('button');
+        confirmBtn.className = 'ace-modal-btn ace-modal-btn-primary';
+        confirmBtn.textContent = chrome.i18n.getMessage("confirm") || "Download";
+        
+        // Assemble
+        btnContainer.appendChild(cancelBtn);
+        btnContainer.appendChild(confirmBtn);
+        
+        modalBox.appendChild(title);
+        modalBox.appendChild(input);
+        modalBox.appendChild(btnContainer);
+        
+        overlay.appendChild(modalBox);
+        document.body.appendChild(overlay);
+        
+        // Logic
+        input.focus();
+        input.select(); // Select all text for easy replacement
+        
+        const close = () => {
+            if (overlay.parentNode) {
+                overlay.parentNode.removeChild(overlay);
+            }
+        };
+        
+        const confirm = () => {
+            const val = input.value.trim();
+            if (val) {
+                onConfirm(val);
+                close();
+            }
+        };
+        
+        cancelBtn.addEventListener('click', close);
+        
+        confirmBtn.addEventListener('click', confirm);
+        
+        input.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                confirm();
+            } else if (e.key === 'Escape') {
+                close();
+            }
+        });
+
+        overlay.addEventListener('click', (e) => {
+            if (e.target === overlay) {
+                close();
+            }
+        });
     }
 
     function downText(text, filename) {

@@ -25,5 +25,8 @@
   "copySuccess": { "message": "Copie réussie ! Vous pouvez maintenant coller dans Notion, Word" },
   "supportedTip": { "message": "Cliquez sur 'Sélect. messages' près de la zone de saisie pour commencer." },
   "unsupportedTip": { "message": "Ouvrez ChatGPT, Claude ou Gemini pour commencer à utiliser l'outil." },
-  "shortcutTip": { "message": "Raccourci : Ctrl + Maj + E (Cmd + Maj + E sur Mac) pour exporter rapidement." }
+  "shortcutTip": { "message": "Raccourci : Ctrl + Maj + E (Cmd + Maj + E sur Mac) pour exporter rapidement." },
+  "enterFilename": { "message": "Entrer le nom du fichier" },
+  "cancel": { "message": "Annuler" },
+  "confirm": { "message": "Télécharger" }
 }

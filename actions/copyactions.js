@@ -125,7 +125,10 @@
 
                 finalContent += '\n\n---\n' + footerText + '\n';
 
-                Utils.downloadText(finalContent, getFilename() + "." + extension);
+                const defaultFilename = getFilename() + "." + extension;
+                Utils.showFilenamePrompt(defaultFilename, (newFilename) => {
+                    Utils.downloadText(finalContent, newFilename);
+                });
             }
         );
     }

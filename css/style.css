@@ -286,3 +286,98 @@ form[class*="group/composer"] div[class*="corner-"] {
     align-items: center;
     padding: 8px;
 }
+
+/* Modal Styles */
+.ace-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 10000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+.ace-modal-box {
+    background-color: white;
+    padding: 24px;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    width: 400px;
+    max-width: 90%;
+    animation: ace-modal-pop 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes ace-modal-pop {
+    from {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.ace-modal-title {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 16px;
+    color: #1f2937;
+}
+
+.ace-modal-input {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    font-size: 14px;
+    margin-bottom: 20px;
+    outline: none;
+    transition: border-color 0.2s;
+    box-sizing: border-box;
+    color: #374151;
+}
+
+.ace-modal-input:focus {
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
+}
+
+.ace-modal-buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+}
+
+.ace-modal-btn {
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    border: none;
+    transition: all 0.2s;
+}
+
+.ace-modal-btn-secondary {
+    background-color: #f3f4f6;
+    color: #4b5563;
+}
+
+.ace-modal-btn-secondary:hover {
+    background-color: #e5e7eb;
+}
+
+.ace-modal-btn-primary {
+    background-color: #3b82f6;
+    color: white;
+}
+
+.ace-modal-btn-primary:hover {
+    background-color: #2563eb;
+}
