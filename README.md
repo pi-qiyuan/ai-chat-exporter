@@ -22,7 +22,13 @@ A lightweight browser extension to export AI conversations to Markdown or Text.
 - Format Conversion: [Turndown](https://github.com/mixmark-io/turndown) (MIT License) — used for elegantly converting HTML to Markdown.
 
 ### Changelog
-#### 🚀 v2.1.0 Update: Features the new Smart Copy (Markdown & Rich Text)
+🎉 NEW IN v2.2.0: SMART FILENAME & CUSTOMIZATION
+-----------------------------------
+We've made organizing your exports even easier with our latest update:
+  - **✨ SMART TOPIC DETECTION**: Automatically uses the chat conversation title as the default filename, saving you from renaming files manually.
+  - **✨ CUSTOM FILENAMES**: A new prompt allows you to review and modify the filename before downloading, ensuring your files are named exactly how you want.
+
+#### v2.1.0 Update: Features the new Smart Copy (Markdown & Rich Text)
   - **✨ New Feature**: Smart Copy (supports Markdown for Notion/Obsidian & Rich Text for Word/Google Docs).
   - **✨ Improvement**: Added `---` separators between messages for better readability.
 
