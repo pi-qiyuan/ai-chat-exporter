@@ -20,6 +20,8 @@ A lightweight browser extension to export AI conversations to Markdown or Text.
 - Core Logic: Vanilla JavaScript
 - Styling: CSS3
 - Format Conversion: [Turndown](https://github.com/mixmark-io/turndown) (MIT License) — used for elegantly converting HTML to Markdown.
+- Zip: [JSZip](https://stuk.github.io/jszip/) (MIT License) — used for export Image Archive.
+- Capture Screenshot: [html2canvas](https://html2canvas.hertzen.com/) (MIT License) — used for export shareable image.
 
 ### Changelog
 🎉 NEW IN v2.2.0: SMART FILENAME & CUSTOMIZATION
@@ -40,9 +42,6 @@ We've made organizing your exports even easier with our latest update:
 - Added: Remember exported messages with visual indicators.
 #### v1.0.0
 - Initial release with Gemini support.
-
-### Acknowledgments
-- Special thanks to the [Turndown](https://github.com/mixmark-io/turndown) project. This project utilizes its MIT-licensed source code to implement the HTML-to-Markdown conversion functionality.
 
 ### License
 MIT License

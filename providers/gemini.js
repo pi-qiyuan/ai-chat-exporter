@@ -3,7 +3,14 @@
         name: "Gemini",
         selectors: {
             user: 'user-query',
-            model: 'message-content'
+            model: 'message-content',
+            chatTitle: '.conversation-title',
+            toolbox: 'toolbox-drawer',
+            queryText: '.query-text-line',
+            modelResponse: 'div[id^="model-response-message-content"]',
+            tableFooter: '.table-footer.hide-from-message-actions',
+            codeBlock: 'code-block',
+            codeDecoration: '.code-block-decoration'
         },
         insertButtons: (buttons) => insertButtonsInternal(buttons),
         generateChatId: (item, type) => generateChatIdInternal(item, type),
@@ -14,7 +21,7 @@
     };
 
     function insertButtonsInternal(buttons) {
-        const targetElement = document.querySelector('toolbox-drawer');
+        const targetElement = document.querySelector(GeminiProvider.selectors.toolbox);
         if(!targetElement){
             return false;
         }
@@ -35,28 +42,12 @@
 
         if (!node || typeof node.querySelectorAll !== 'function' || !type) return null;
 
-        const extractId = (jslog) => {
-            const allMatches = jslog.match(/[rc]_[a-zA-Z0-9_]+/g);
-            if (allMatches && allMatches.length > 0) {
-                const firstMatch = allMatches[0];
-                const isInternalTrackWord = /^(c_click|c_impression|c_attention)$/.test(firstMatch);
-                if (!isInternalTrackWord && (firstMatch.startsWith('r_') || firstMatch.startsWith('c_'))) {
-                    const r_id = allMatches.find(id => id.startsWith('r_')) || null;
-                    const c_id = allMatches.find(id => id.startsWith('c_')) || null;
-                    if (c_id && r_id) {
-                        return `${type}_${c_id}_${r_id}`;
-                    }
-                }
-            }
-            return null;
-        };
-
         const elements = [node, ...Array.from(node.querySelectorAll('[jslog]'))];
         for (const el of elements) {
             const jslog = el.getAttribute('jslog');
             if (!jslog) continue;
 
-            const id = extractId(jslog);
+            const id = extractGeminiIdFromJsLog(jslog, type);
             if (id) return id;
         }
 
@@ -64,7 +55,7 @@
         while (current) {
             const jslog = current.getAttribute('jslog');
             if (jslog) {
-                const id = extractId(jslog);
+                const id = extractGeminiIdFromJsLog(jslog, type);
                 if (id) return id;
             }
             current = current.parentElement;
@@ -73,17 +64,37 @@
         return null;
     }
 
-    function getFilenameInternal() {
-        let div = document.querySelector('.conversation-title');
-        if (div) {
-            return div.textContent.trim();
+    function extractGeminiIdFromJsLog(jslog, type) {
+        const allMatches = jslog.match(/[rc]_[a-zA-Z0-9_]+/g);
+        if (allMatches && allMatches.length > 0) {
+            const firstMatch = allMatches[0];
+            const isInternalTrackWord = /^(c_click|c_impression|c_attention)$/.test(firstMatch);
+            if (!isInternalTrackWord && (firstMatch.startsWith('r_') || firstMatch.startsWith('c_'))) {
+                const r_id = allMatches.find(id => id.startsWith('r_')) || null;
+                const c_id = allMatches.find(id => id.startsWith('c_')) || null;
+                if (c_id && r_id) {
+                    return `${type}_${c_id}_${r_id}`;
+                }
+            }
         }
-        return GeminiProvider.name;
+        return null;
+    }
+
+    function getFilenameInternal() {
+        return Utils.getProviderFilename(GeminiProvider.selectors.chatTitle, GeminiProvider.name);
     }
 
     function getTextContentInternal(ctx) {
         if (ctx.type === 'user') {
-            return ctx.userQueryElement.textContent;
+            let div = ctx.userQueryElement;
+            if (div) {
+                let child = div.querySelector(GeminiProvider.selectors.queryText);
+                if (child) {
+                    return child.textContent.trim();
+                }
+                return div.textContent.trim();
+            }
+            return "";
         } 
 
         if (ctx.type !== 'model') {
@@ -95,7 +106,7 @@
             return "";
         }
 
-        const footers = nextDiv.querySelectorAll('.table-footer.hide-from-message-actions');
+        const footers = nextDiv.querySelectorAll(GeminiProvider.selectors.tableFooter);
         const hiddenElements = [];
 
         footers.forEach(el => {
@@ -116,14 +127,14 @@
 
     function getMarkdownTargetInternal(ctx) {
         if (ctx.type === 'user') {
-            return ctx.userQueryElement.querySelector('.query-text');
+            return ctx.userQueryElement.querySelector(GeminiProvider.selectors.queryText);
         } 
 
         if (ctx.type === 'model') {
-            const target = ctx.checkbox.closest('message-content').querySelector('div[id^="model-response-message-content"]');
+            const target = ctx.checkbox.closest(GeminiProvider.selectors.model).querySelector(GeminiProvider.selectors.modelResponse);
             if (target) {
                 const clone = target.cloneNode(true);
-                clone.querySelectorAll('.table-footer.hide-from-message-actions').forEach(el => el.remove());
+                clone.querySelectorAll(GeminiProvider.selectors.tableFooter).forEach(el => el.remove());
                 return clone;
             }
         }
@@ -131,10 +142,10 @@
     }
 
     function getCodeLanguageInternal(node) {
-        let parent = node.closest('code-block');
+        let parent = node.closest(GeminiProvider.selectors.codeBlock);
         if (!parent) return '';
 
-        let codeDecoration = parent.querySelector('.code-block-decoration');
+        let codeDecoration = parent.querySelector(GeminiProvider.selectors.codeDecoration);
         return codeDecoration ? codeDecoration.textContent : '';
     }
 

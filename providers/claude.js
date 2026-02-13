@@ -3,7 +3,11 @@
         name: "Claude",
         selectors: {
             user: '[data-testid="user-message"]',
-            model: '.font-claude-response'
+            model: '.font-claude-response',
+            chatTitle: '[data-testid="chat-title-button"]',
+            extendedThinking: 'button[aria-label="Toggle menu"]',
+            markdownContent: '.standard-markdown',
+            codeLangLabel: '.text-text-500'
         },
         insertButtons: (buttons) => insertButtonsInternal(buttons),
         generateChatId: (item, type) => generateChatIdInternal(item, type),
@@ -14,7 +18,7 @@
     };
 
     function insertButtonsInternal(buttons) {
-        const extendedThinkingBtn = document.querySelector('button[aria-label="Extended thinking"]');
+        const extendedThinkingBtn = document.querySelector(ClaudeProvider.selectors.extendedThinking);
         if (!extendedThinkingBtn) {
             return false;
         }
@@ -48,11 +52,7 @@
     }
 
     function getFilenameInternal() {
-        const titleBtn = document.querySelector('[data-testid="chat-title-button"]');
-        if (titleBtn) {
-            return titleBtn.textContent.trim();
-        }
-        return ClaudeProvider.name;
+        return Utils.getProviderFilename(ClaudeProvider.selectors.chatTitle, ClaudeProvider.name);
     }
 
     function getTextContentInternal(ctx) {
@@ -75,7 +75,7 @@
         if (ctx.type === 'user') {
             return ctx.userQueryElement;
         } else if (ctx.type === 'model') {
-            const markdowns = ctx.messageContentWrapper.querySelectorAll(".standard-markdown");
+            const markdowns = ctx.messageContentWrapper.querySelectorAll(ClaudeProvider.selectors.markdownContent);
             if (markdowns.length === 0) return null;
 
             const container = document.createElement("div");
@@ -98,7 +98,7 @@
         if (!preContainer) return '';
 
         const langLabel = preContainer.previousElementSibling;
-        if (langLabel && langLabel.classList.contains('text-text-500')) {
+        if (langLabel && langLabel.classList.contains(ClaudeProvider.selectors.codeLangLabel.replace('.', ''))) {
             return langLabel.textContent.trim();
         }
 

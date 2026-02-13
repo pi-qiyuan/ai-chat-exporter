@@ -1,10 +1,25 @@
 (function(global){
     global.AppState = {
         currentProvider: null,
-        inSelectMode: false
+        inSelectMode: false,
+        isDev: false
     };
 
     const Utils = {
+        log: (msg, data = null, level = 'log') => {
+            if (!global.AppState.isDev) return;
+
+            const prefix = '[AI-Chat-Exporter]';
+            const content = data ? [msg, data] : [msg];
+
+            switch (level) {
+                case 'warn': console.warn(prefix, ...content); break;
+                case 'error': console.error(prefix, ...content); break;
+                case 'info': console.info(prefix, ...content); break;
+                default: console.log(prefix, ...content); break;
+            }
+        },
+
         showToast: (message, duration = 3000) => {
             showToast(message, duration);
         },
@@ -21,8 +36,147 @@
 
         showFilenamePrompt: (defaultName, onConfirm) => {
             showFilenamePrompt(defaultName, onConfirm);
+        },
+
+        findAssociatedUserQuery: (ctx) => {
+            return findAssociatedUserQuery(ctx);
+        },
+
+        getFilename: () => {
+            return getFilename();
+        },
+
+        getProviderFilename: (selector, fallback) => {
+            const element = document.querySelector(selector);
+            if (element && element.textContent.trim()) {
+                return element.textContent.trim();
+            }
+            return fallback;
+        },
+
+        getHeaderTitle: (type) => {
+            if (type === 'user') {
+                return chrome.i18n.getMessage("userHeader");
+            } else if (type === 'model') {
+                return AppState.currentProvider ? AppState.currentProvider.name : 'AI';
+            }
+            return '';
+        },
+
+        getExportFooter: () => {
+            const timestamp = new Date().toLocaleString();
+            const appName = chrome.i18n.getMessage("extensionName");
+            const modelName = AppState.currentProvider ? AppState.currentProvider.name : 'AI';
+            return chrome.i18n.getMessage("exportFooter", [appName, timestamp, modelName]);
+        },
+
+        createTurndownService: () => {
+            return createTurndownService();
         }
     };
+
+    function findAssociatedUserQuery(ctx) {
+        const allUserLabels = Array.from(document.querySelectorAll('.ace-checkbox-user'));
+        const currentModelLabel = ctx.labelTag;
+        let lastUserLabel = null;
+
+        for (const userLabel of allUserLabels) {
+            if (userLabel.compareDocumentPosition(currentModelLabel) & Node.DOCUMENT_POSITION_FOLLOWING) {
+                lastUserLabel = userLabel;
+            } else {
+                break;
+            }
+        }
+
+        if (lastUserLabel) {
+            const checkbox = lastUserLabel.querySelector('.ace-model-selector');
+            if (checkbox && !checkbox.checked) {
+                const userQueryElement = lastUserLabel.nextElementSibling;
+                if (userQueryElement) {
+                    return { type: 'user', userQueryElement, labelTag: lastUserLabel };
+                }
+            }
+        }
+        return null;
+    }
+
+    function getFilename() {
+        if (AppState.currentProvider && AppState.currentProvider.getFilename) {
+            return AppState.currentProvider.getFilename();
+        }
+        return "Export";
+    }
+
+    function createTurndownService() {
+        const turndownService = new TurndownService({
+            headingStyle: 'atx',
+            codeBlockStyle: 'fenced'
+        });
+
+        turndownService.addRule('fencedCodeBlock', {
+            filter: function (node, options) {
+                return (
+                    options.codeBlockStyle === 'fenced' &&
+                    node.nodeName === 'PRE' &&
+                    node.querySelector('code')
+                );
+            },
+            replacement: function (_content, node, options) {
+                let language = '';
+                if (AppState.currentProvider && AppState.currentProvider.getCodeLanguage) {
+                    language = AppState.currentProvider.getCodeLanguage(node);
+                }
+
+                const codeElement = node.querySelector('code');
+                return (
+                    '\n\n' + options.fence + language + '\n' +
+                    codeElement.textContent +
+                    '\n' + options.fence + '\n\n'
+                );
+            }
+        });
+
+        turndownService.addRule('table-cell', {
+            filter: ['th', 'td'],
+            replacement: function (content) {
+                return ' ' + content.replace(/\n/g, '<br>').trim() + ' |';
+            }
+        });
+
+        turndownService.addRule('table-row', {
+            filter: ['tr'],
+            replacement: function (content) {
+                return '|' + content.trim() + '\n';
+            }
+        });
+
+        turndownService.addRule('table-custom', {
+            filter: 'table',
+            replacement: function (content, node) {
+                const rows = Array.from(node.rows);
+                if (rows.length === 0) return '';
+
+                const columnCount = rows[0].cells.length;
+                let delimiterRow = '|';
+                for (let i = 0; i < columnCount; i++) {
+                    delimiterRow += ' --- |';
+                }
+
+                const lines = content.trim().split('\n').filter(l => l.trim() !== '');
+
+                const header = lines[0];
+                const body = lines.slice(1).join('\n');
+
+                return '\n\n' + 
+                    header + '\n' + 
+                    delimiterRow + 
+                    (body ? '\n' + body : '') + 
+                    '\n\n';
+            }
+        });
+
+        return turndownService;
+    }
 
     function showToast(message, duration) {
         const toast = document.createElement('div');
@@ -45,60 +199,51 @@
     }
 
     function showFilenamePrompt(defaultName, onConfirm) {
-        // Create Overlay
         const overlay = document.createElement('div');
         overlay.className = 'ace-modal-overlay';
-        
-        // Create Modal Box
+
         const modalBox = document.createElement('div');
         modalBox.className = 'ace-modal-box';
-        
-        // Title
+
         const title = document.createElement('div');
         title.className = 'ace-modal-title';
-        title.textContent = chrome.i18n.getMessage("enterFilename") || "Enter Filename"; // Fallback if key missing
-        
-        // Input
+        title.textContent = chrome.i18n.getMessage("enterFilename") || "Enter Filename";
+
         const input = document.createElement('input');
         input.type = 'text';
         input.className = 'ace-modal-input';
         input.value = defaultName;
-        
-        // Button Container
+
         const btnContainer = document.createElement('div');
         btnContainer.className = 'ace-modal-buttons';
-        
-        // Cancel Button
+
         const cancelBtn = document.createElement('button');
         cancelBtn.className = 'ace-modal-btn ace-modal-btn-secondary';
         cancelBtn.textContent = chrome.i18n.getMessage("cancel") || "Cancel";
-        
-        // Confirm Button
+
         const confirmBtn = document.createElement('button');
         confirmBtn.className = 'ace-modal-btn ace-modal-btn-primary';
         confirmBtn.textContent = chrome.i18n.getMessage("confirm") || "Download";
-        
-        // Assemble
+
         btnContainer.appendChild(cancelBtn);
         btnContainer.appendChild(confirmBtn);
-        
+
         modalBox.appendChild(title);
         modalBox.appendChild(input);
         modalBox.appendChild(btnContainer);
-        
+
         overlay.appendChild(modalBox);
         document.body.appendChild(overlay);
-        
-        // Logic
+
         input.focus();
-        input.select(); // Select all text for easy replacement
-        
+        input.select();
+
         const close = () => {
             if (overlay.parentNode) {
                 overlay.parentNode.removeChild(overlay);
             }
         };
-        
+
         const confirm = () => {
             const val = input.value.trim();
             if (val) {
@@ -106,11 +251,10 @@
                 close();
             }
         };
-        
+
         cancelBtn.addEventListener('click', close);
-        
         confirmBtn.addEventListener('click', confirm);
-        
+
         input.addEventListener('keydown', (e) => {
             if (e.key === 'Enter') {
                 confirm();

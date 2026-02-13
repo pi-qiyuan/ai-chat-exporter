@@ -11,6 +11,21 @@
             return;
         }
 
+        const selectButton = createSelectButton();
+        const exportButton = createExportButton();
+        const moreButton = createMoreButton();
+
+        const buttons = { selectButton, exportButton, moreButton };
+
+        if (AppState.currentProvider && AppState.currentProvider.insertButtons(buttons)) {
+            if (observer) observer.disconnect();
+            initExportModule();
+            initSelectModule();
+            initMoreModule();
+        }
+    }
+
+    function createSelectButton() {
         const selectButton = document.createElement('div');
         selectButton.className = 'ace-export-button';
         selectButton.innerHTML = `
@@ -28,7 +43,10 @@
                 </ul>
             </div>
         `;
+        return selectButton;
+    }
 
+    function createExportButton() {
         const platform = navigator.userAgentData?.platform || navigator.platform;
         const isMac = /Mac/i.test(platform);
         const shortcutHint = isMac ? 'Cmd + Shift + E' : 'Ctrl + Shift + E';
@@ -43,15 +61,20 @@
                 <button id="menu-toggle-btn" class="ace-dropdown-toggle">
                     <span class="ace-arrow">▼</span>
                 </button>
-                
+
                 <ul id="export-menu" class="ace-dropdown-menu">
                     <li class="ace-menu-item" data-format="txt">${chrome.i18n.getMessage('exportAsText')}</li>
                     <li class="ace-menu-item" data-format="md">${chrome.i18n.getMessage('exportAsMarkdown')}</li>
                     <li class="ace-menu-item" data-format="clipboard">${chrome.i18n.getMessage('smartCopy')}</li>
+                    <li class="ace-menu-item" data-format="offline">${chrome.i18n.getMessage('exportOffline')}</li>
+                    <li class="ace-menu-item" data-format="screenshot">${chrome.i18n.getMessage('exportScreenshot')}</li>
                 </ul>
             </div>
         `;
+        return exportButton;
+    }
 
+    function createMoreButton() {
         const moreButton = document.createElement('div');
         moreButton.className = 'ace-export-button';
         moreButton.innerHTML = `
@@ -89,15 +112,7 @@
                 </ul>
             </div>
         `;
-
-        const buttons = { selectButton, exportButton, moreButton };
-        
-        if (AppState.currentProvider && AppState.currentProvider.insertButtons(buttons)) {
-            if (observer) observer.disconnect();
-            initExportModule();
-            initSelectModule();
-            initMoreModule();
-        }
+        return moreButton;
     }
 
     function setupDropdown(toggleBtn, menu) {
@@ -115,7 +130,7 @@
             allDropdowns.forEach(({ menuId, toggleId }) => {
                 const otherMenu = document.getElementById(menuId);
                 const otherToggle = document.getElementById(toggleId);
-                
+
                 if (otherMenu && otherMenu !== menu) {
                     otherMenu.classList.remove('ace-show');
                 }
@@ -146,6 +161,7 @@
             const target = event.target;
             if (target.classList.contains('ace-menu-item')) {
                 const format = target.getAttribute('data-format');
+                
                 CopyActions.handleExport(format);
                 if (format === 'clipboard') {
                     setTimeout(() => {
@@ -158,18 +174,21 @@
                 }
             }
         });
-
-        window.addEventListener('ace-copy-success', () => {
-            const copyBtn = menu.querySelector('[data-format="clipboard"]');
-            if (copyBtn) {
-                const originalText = copyBtn.innerText;
-                copyBtn.innerText = "✅ " + chrome.i18n.getMessage('copied');
-                setTimeout(() => {
-                    copyBtn.innerText = originalText;
-                }, 2000);
-            }
-        });
     }
+
+    window.addEventListener('ace-copy-success', () => {
+        const menu = document.getElementById('export-menu');
+        if (!menu) return;
+
+        const copyBtn = menu.querySelector('[data-format="clipboard"]');
+        if (copyBtn) {
+            const originalText = copyBtn.innerText;
+            copyBtn.innerText = "✅ " + chrome.i18n.getMessage('copied');
+            setTimeout(() => {
+                copyBtn.innerText = originalText;
+            }, 2000);
+        }
+    });
 
     function initSelectModule() {
         const selectBtn = document.getElementById('select-action-btn');

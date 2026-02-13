@@ -16,9 +16,16 @@
                 "https://claude.ai/*"
             ],
             "js": [
+                "jszip.js",
+                "html2canvas.js",
                 "turndown.js",
                 "utils.js",
                 "storagemanager.js",
+                "actions/formatters/text_formatter.js",
+                "actions/formatters/markdown_formatter.js",
+                "actions/formatters/clipboard_formatter.js",
+                "actions/formatters/offline_formatter.js",
+                "actions/formatters/image_formatter.js",
                 "actions/checkactions.js",
                 "actions/copyactions.js",
                 "providers/gemini.js",
@@ -37,9 +44,17 @@
         "default_title": "__MSG_extensionName__",
         "default_popup": "popup.html"
     },
+    "background": {
+        "service_worker": "background.js"
+    },
     "permissions": [
         "storage",
         "clipboardWrite",
         "activeTab"
+    ],
+    "host_permissions": [
+        "https://*.googleusercontent.com/*",
+        "https://*.google.com/*",
+        "https://chatgpt.com/*"
     ]
 }

@@ -3,7 +3,11 @@
         name: "ChatGPT",
         selectors: {
             user: 'div[data-message-author-role="user"]',
-            model: 'div[data-message-author-role="assistant"]'
+            model: 'div.flex.max-w-full.flex-col.grow',
+            chatForm: 'form.group\\/composer.w-full',
+            chatTitle: 'a[data-active]',
+            markdownContent: 'div[class^="markdown"],div.relative.w-full.text-start',
+            codeBlock: 'code[class*="whitespace-pre!"][class*="language-"]'
         },
         insertButtons: (buttons) => insertButtonsInternal(buttons),
         generateChatId: (item, type) => generateChatIdInternal(item, type),
@@ -14,7 +18,7 @@
     };
 
     function insertButtonsInternal(buttons) {
-        const chatgptForm = document.querySelector('form.group\\/composer.w-full');
+        const chatgptForm = document.querySelector(ChatGPTProvider.selectors.chatForm);
         if (!chatgptForm) {
             return false;
         }
@@ -32,20 +36,18 @@
     }
 
     function generateChatIdInternal(item, type) {
-        let data_message_id = item.getAttribute('data-message-id');
-        if (!data_message_id) {
+        const key = 'data-turn-id';
+        const el = item.closest(`[${key}]`);
+        if (!el) {
             return null;
         }
 
+        const data_message_id = el.getAttribute(key);
         return `${type}_${data_message_id}`;
     }
 
     function getFilenameInternal() {
-        let div = document.querySelector('a[data-active]');
-        if (div) {
-            return div.textContent.trim();
-        }
-        return ChatGPTProvider.name;
+        return Utils.getProviderFilename(ChatGPTProvider.selectors.chatTitle, ChatGPTProvider.name);
     }
 
     function getTextContentInternal(ctx) {
@@ -65,13 +67,13 @@
         if (ctx.type === 'user') {
             return ctx.userQueryElement;
         } else if (ctx.type === 'model') {
-            return ctx.checkbox.closest('div[data-message-author-role="assistant"]').querySelector('div[class^="markdown"]');
+            return ctx.checkbox.closest(ChatGPTProvider.selectors.model).querySelector(ChatGPTProvider.selectors.markdownContent);
         }
         return null;
     }
 
     function getCodeLanguageInternal(node) {
-        const codeDiv = node.querySelector('code[class*="whitespace-pre!"][class*="language-"]');
+        const codeDiv = node.querySelector(ChatGPTProvider.selectors.codeBlock);
         if (!codeDiv) return '';
 
         const langClass = Array.from(codeDiv.classList).find(c => c.startsWith('language-'));

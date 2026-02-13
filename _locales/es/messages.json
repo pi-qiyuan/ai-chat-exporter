@@ -1,6 +1,6 @@
 {
   "extensionName": { "message": "Exportador de Chat IA" },
-  "extensionDescription": { "message": "Una extensión ligera de navegador para exportar conversaciones de IA a Markdown o Texto." },
+  "extensionDescription": { "message": "Una extensión ligera de navegador para exportar conversations de IA a Markdown o Texto." },
   "selectBtn": { "message": "Seleccionar mensajes" },
   "exportBtn": { "message": "Exportar seleccionados" },
   "exportAsText": { "message": "Exportar como TXT" },
@@ -21,6 +21,10 @@
   "exportedTag": { "message": "(Exportado)" },
   "exportFooter": { "message": "Exportado por $1 el $2 de la conversación de $3" },
   "smartCopy": { "message": "Copia Inteligente" },
+  "exportOffline": { "message": "Exportar archivo de imágenes" },
+  "exportScreenshot": { "message": "Exportar imagen para compartir" },
+  "exporting": { "message": "Exportando en segundo plano..." },
+  "imageGenerateFailed": { "message": "Error al generar la imagen, por favor inténtelo de nuevo." },
   "copied": { "message": "Copiado" },
   "copySuccess": { "message": "¡Copia exitosa! Ahora puedes pegar en Notion, Word" },
   "supportedTip": { "message": "Haz clic en 'Seleccionar mensajes' cerca del área de chat para comenzar." },
