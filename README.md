@@ -24,8 +24,13 @@ A lightweight browser extension to export AI conversations to Markdown or Text.
 - Capture Screenshot: [html2canvas](https://html2canvas.hertzen.com/) (MIT License) — used for export shareable image.
 
 ### Changelog
-🎉 NEW IN v2.2.0: SMART FILENAME & CUSTOMIZATION
+🎉 NEW IN v2.3.0: IMAGE ARCHIVE & SHAREABLE LONG IMAGES
 -----------------------------------
+Save more than just text! Our latest update focuses on visual preservation:
+  - ✨ **EXPORT IMAGE ARCHIVE**: The best way to save AI-generated images. Downloads selected content into a complete offline package, ensuring your visuals are preserved forever.
+  - ✨ **SHAREABLE LONG IMAGES**: Generate a high-quality long image of your conversation, perfectly formatted for sharing on social media or with colleagues.
+
+#### v2.2.0: SMART FILENAME & CUSTOMIZATION
 We've made organizing your exports even easier with our latest update:
   - **✨ SMART TOPIC DETECTION**: Automatically uses the chat conversation title as the default filename, saving you from renaming files manually.
   - **✨ CUSTOM FILENAMES**: A new prompt allows you to review and modify the filename before downloading, ensuring your files are named exactly how you want.
