@@ -18,6 +18,7 @@
   "selectUser": { "message": "Select All Prompts" },
   "selectModel": { "message": "Select All Responses" },
   "moreBtn": { "message": "More" },
+  "moreTools": { "message": "More Tools" },
   "privacyPolicy": { "message": "Privacy Policy" },
   "feedback": { "message": "Feedback" },
   "sponsor": { "message": "Buy me a coffee" },

@@ -90,23 +90,13 @@
                         </span>
                     </li>
                     <li class="ace-menu-item">
+                        <a href="https://hugbear.ai" target="_blank" class="ace-menu-link">
+                            🚀 ${chrome.i18n.getMessage('moreTools')}
+                        </a>
+                    </li>
+                    <li class="ace-menu-item">
                         <a href="https://ko-fi.com/qiyuanyang" target="_blank" class="ace-menu-link">
                             ❤️ ${chrome.i18n.getMessage('sponsor')}
-                        </a>
-                    </li>
-                    <li class="ace-menu-item">
-                        <a href="https://github.com/pi-qiyuan/ai-chat-exporter/issues/new" target="_blank" class="ace-menu-link">
-                            ${chrome.i18n.getMessage('feedback')}
-                        </a>
-                    </li>
-                    <li class="ace-menu-item">
-                        <a href="https://github.com/pi-qiyuan/ai-chat-exporter" target="_blank" class="ace-menu-link">
-                            ${chrome.i18n.getMessage('contact')}
-                        </a>
-                    </li>
-                    <li class="ace-menu-item">
-                        <a href="https://github.com/pi-qiyuan/ai-chat-exporter/blob/main/PRIVACY.md" target="_blank" class="ace-menu-link">
-                            ${chrome.i18n.getMessage('privacyPolicy')}
                         </a>
                     </li>
                 </ul>

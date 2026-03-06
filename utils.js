@@ -34,8 +34,14 @@
 
         extractText: element => extractText(element),
 
-        showFilenamePrompt: (defaultName, onConfirm) => {
-            showFilenamePrompt(defaultName, onConfirm);
+        showFilenamePrompt: (defaultName) => {
+            return new Promise((resolve) => {
+                showFilenamePrompt(defaultName, (newFilename) => {
+                    resolve(newFilename);
+                }, () => {
+                    resolve(null);
+                });
+            });
         },
 
         findAssociatedUserQuery: (ctx) => {
@@ -198,7 +204,7 @@
         }, duration);
     }
 
-    function showFilenamePrompt(defaultName, onConfirm) {
+    function showFilenamePrompt(defaultName, onConfirm, onCancel) {
         const overlay = document.createElement('div');
         overlay.className = 'ace-modal-overlay';
 
@@ -252,20 +258,31 @@
             }
         };
 
-        cancelBtn.addEventListener('click', close);
+        const cancel = () => {
+            if (onCancel) onCancel();
+            close();
+        };
+
+        cancelBtn.addEventListener('click', cancel);
         confirmBtn.addEventListener('click', confirm);
 
         input.addEventListener('keydown', (e) => {
             if (e.key === 'Enter') {
                 confirm();
             } else if (e.key === 'Escape') {
-                close();
+                cancel();
             }
         });
 
-        overlay.addEventListener('click', (e) => {
-            if (e.target === overlay) {
-                close();
+        let mousedownTargetIsOverlay = false;
+
+        overlay.addEventListener('mousedown', (e) => {
+            mousedownTargetIsOverlay = (e.target === overlay);
+        });
+
+        overlay.addEventListener('mouseup', (e) => {
+            if (mousedownTargetIsOverlay && e.target === overlay) {
+                cancel();
             }
         });
     }

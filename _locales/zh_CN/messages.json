@@ -12,6 +12,7 @@
   "selectUser": { "message": "选择全部提问" },
   "selectModel": { "message": "选择全部回答" },
   "moreBtn": { "message": "更多" },
+  "moreTools": { "message": "更多工具" },
   "privacyPolicy": { "message": "隐私声明" },
   "feedback": { "message": "反馈" },
   "sponsor": { "message": "请我喝杯咖啡" },

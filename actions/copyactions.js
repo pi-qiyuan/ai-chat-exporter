@@ -54,7 +54,10 @@
         await runExportSequence(
             selectedCheckboxes,
             async (context) => ClipboardFormatter.processItem(context, turndownService, accumulators),
-            async () => ClipboardFormatter.finalize(accumulators)
+            async () => {
+                await ClipboardFormatter.finalize(accumulators);
+                return true;
+            }
         );
     }
 
@@ -78,7 +81,7 @@
                 return false;
             },
             async () => {
-                await OfflineFormatter.generateAndDownloadZip(zip, fullHtmlContent);
+                return await OfflineFormatter.generateAndDownloadZip(zip, fullHtmlContent);
             }
         );
     }
@@ -96,6 +99,7 @@
             },
             async () => {
                 await ImageFormatter.finalize(container);
+                return true;
             }
         );
     }
@@ -112,23 +116,28 @@
                 const context = getExportContext(checkbox, provider);
                 if (!context) continue;
 
-                if (context.chatId) {
-                    chatIdsToSave[context.chatId] = true;
-                }
-
                 const result = await itemProcessor(context);
                 if (result) {
                     hasContent = true;
+                    if (context.chatId) {
+                        chatIdsToSave[context.chatId] = true;
+                    }
                 }
             }
 
-            if (Object.keys(chatIdsToSave).length > 0) {
+            if (hasContent && postProcessor) {
+                const postResult = await postProcessor();
+                if (postResult === false) {
+                    return; 
+                }
+            }
+
+            if (hasContent && Object.keys(chatIdsToSave).length > 0) {
                 await StorageManager.saveChatIds(chatIdsToSave);
                 updateExportStatus(selectedCheckboxes);
             }
 
-            if (hasContent && postProcessor) {
-                await postProcessor();
+            if (hasContent) {
                 selectedCheckboxes.forEach(cb => cb.checked = false);
             }
         } catch (error) {
@@ -207,9 +216,12 @@
                 finalContent += footerText + '\n';
 
                 const defaultFilename = Utils.getFilename() + "." + extension;
-                Utils.showFilenamePrompt(defaultFilename, (newFilename) => {
+                const newFilename = await Utils.showFilenamePrompt(defaultFilename);
+                if (newFilename) {
                     Utils.downloadText(finalContent, newFilename);
-                });
+                    return true;
+                }
+                return false;
             }
         );
     }

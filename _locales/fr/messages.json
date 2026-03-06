@@ -12,6 +12,7 @@
   "selectUser": { "message": "Toutes les questions" },
   "selectModel": { "message": "Toutes les réponses" },
   "moreBtn": { "message": "Plus" },
+  "moreTools": { "message": "Plus d'outils" },
   "privacyPolicy": { "message": "Politique de confidentialité" },
   "feedback": { "message": "Retour" },
   "sponsor": { "message": "Offrez-moi un café" },

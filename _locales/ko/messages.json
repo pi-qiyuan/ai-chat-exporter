@@ -12,6 +12,7 @@
   "selectUser": { "message": "모든 질문 선택" },
   "selectModel": { "message": "모든 답변 선택" },
   "moreBtn": { "message": "더보기" },
+  "moreTools": { "message": "더 많은 도구" },
   "privacyPolicy": { "message": "개인정보 처리방침" },
   "feedback": { "message": "피드백" },
   "sponsor": { "message": "커피 한 잔 사주기" },

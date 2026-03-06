@@ -4,7 +4,7 @@
         selectors: {
             user: 'user-query',
             model: 'message-content',
-            chatTitle: '.conversation-title',
+            chatTitle: '.conversation.selected',
             toolbox: 'toolbox-drawer',
             queryText: '.query-text-line',
             modelResponse: 'div[id^="model-response-message-content"]',

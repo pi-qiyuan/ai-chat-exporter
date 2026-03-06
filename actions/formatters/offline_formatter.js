@@ -34,7 +34,8 @@
 
             zip.file("index.html", finalHtml);
             const defaultFilename = Utils.getFilename() + ".zip";
-            Utils.showFilenamePrompt(defaultFilename, async (newFilename) => {
+            const newFilename = await Utils.showFilenamePrompt(defaultFilename);
+            if (newFilename) {
                 const content = await zip.generateAsync({ type: "blob" });
                 const url = URL.createObjectURL(content);
                 const a = document.createElement("a");
@@ -42,7 +43,9 @@
                 a.download = newFilename;
                 a.click();
                 URL.revokeObjectURL(url);
-            });
+                return true;
+            }
+            return false;
         }
     };
 

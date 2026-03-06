@@ -12,6 +12,7 @@
   "selectUser": { "message": "Todas las preguntas" },
   "selectModel": { "message": "Todas las respuestas" },
   "moreBtn": { "message": "Más" },
+  "moreTools": { "message": "Más herramientas" },
   "privacyPolicy": { "message": "Política de privacidad" },
   "feedback": { "message": "Comentarios" },
   "sponsor": { "message": "Invítame a un café" },
