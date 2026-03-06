@@ -2,19 +2,28 @@
 
 A lightweight browser extension to export AI conversations to Markdown or Text.
 
+Stop copy-pasting your AI conversations manually! AI Chat Exporter is a lightweight, privacy-focused tool designed to help you save and organize your AI chats with one click.
+
+Whether you are a developer building a knowledge base, a student organizing study notes, or a writer collecting inspiration, this extension makes exporting effortless.
+
 ### Features
-- **Selective Export**: Click the "Select Messages" button and check the items you want.
-- **Multi-language**: English, 中文, 日本語, 한국어, Deutsch, Français, Español.
-- **Privacy**: The code is open source, and all processing is done locally.
+- **ALL-IN-ONE SUPPORT**: Works on ChatGPT (chatgpt.com), Claude (claude.ai), and Gemini (gemini.google.com).
+- **SMART FILENAMES**: Automatically uses chat titles as filenames and allows custom naming before download.
+- **SMART COPY**: The fastest way to move chats. Optimizes clipboard content for Notion, Obsidian, Word, Google Docs, and more.
+- **SELECTIVE EXPORT**: Toggle "Select Mode" to check only specific messages you want to save.
+- **HIGH-FIDELITY**: Perfect conversion of code blocks (with language tags), bold text, lists, and tables. Includes clear separators (---) for readability.
+- **PRIVACY FIRST**: Everything happens locally in your browser. We never collect or upload your chat history.
+- **MULTILINGUAL**: Interface available in English, 中文, 日本語, 한국어, Deutsch, Français, and Español.
 
 ### Installation
 [Download on Chrome Web Store](https://chromewebstore.google.com/detail/ai-chat-exporter/gnplifnbchmpeggocmkejocgldkahgnc)
 
 ### Usage
-1. Open the AI chat web page.
+1. Open any chat on ChatGPT, Claude, or Gemini.
 2. Click the "Select Messages" button below the message input box.
 3. Select the messages you want to export.
 4. You can export directly as a TXT file, or you can choose "Export as Markdown" or "Export as TXT".
+5. Use "Smart Copy" to paste into Notion/Word, or click "Export" to download files instantly.
 
 ### Tech Stack
 - Core Logic: Vanilla JavaScript
