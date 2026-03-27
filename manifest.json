@@ -2,7 +2,7 @@
     "name": "__MSG_extensionName__",
     "description": "__MSG_extensionDescription__",
     "default_locale": "en",
-    "version": "2.3.1",
+    "version": "2.3.2",
     "manifest_version": 3,
     "icons": {
         "128": "icon.png"
@@ -16,11 +16,11 @@
                 "https://claude.ai/*"
             ],
             "js": [
-                "jszip.js",
-                "html2canvas.js",
-                "turndown.js",
-                "utils.js",
-                "storagemanager.js",
+                "lib/jszip.js",
+                "lib/html2canvas.js",
+                "lib/turndown.js",
+                "js/utils.js",
+                "js/storagemanager.js",
                 "actions/formatters/text_formatter.js",
                 "actions/formatters/markdown_formatter.js",
                 "actions/formatters/clipboard_formatter.js",
@@ -31,7 +31,7 @@
                 "providers/gemini.js",
                 "providers/chatgpt.js",
                 "providers/claude.js",
-                "buttoncreator.js",
+                "js/buttoncreator.js",
                 "content.js"
             ],
             "css": [

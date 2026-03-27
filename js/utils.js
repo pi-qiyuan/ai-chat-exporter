@@ -119,6 +119,67 @@
             codeBlockStyle: 'fenced'
         });
 
+        turndownService.addRule('ignore-math-internals', {
+            filter: function (node) {
+                return (
+                    node.classList.contains('katex-html') || 
+                    node.classList.contains('katex-mathml') ||
+                    node.classList.contains('katex-svg') ||
+                    node.nodeName === 'SVG' ||
+                    (node.nodeName === 'IMG' && node.classList.contains('katex-svg'))
+                );
+            },
+            replacement: function () {
+                return '';
+            }
+        });
+
+        turndownService.addRule('math-formula', {
+            filter: function (node) {
+                return (
+                    node.classList.contains('katex') || 
+                    node.classList.contains('math-inline') || 
+                    node.classList.contains('math-display') ||
+                    node.nodeName === 'MJX-CONTAINER' ||
+                    (node.nodeName === 'SPAN' && node.getAttribute('data-latex')) ||
+                    (node.nodeName === 'DIV' && node.classList.contains('math'))
+                );
+            },
+            replacement: function (content, node) {
+                const annotation = node.querySelector('annotation[encoding="application/x-tex"]');
+                if (annotation) return formatMath(annotation.textContent, node);
+
+                const ariaLabel = node.getAttribute('aria-label');
+                if (ariaLabel && ariaLabel.includes('\\')) return formatMath(ariaLabel, node);
+
+                const latexData = node.getAttribute('data-latex') || node.getAttribute('data-tex');
+                if (latexData) return formatMath(latexData, node);
+
+                const svgImg = node.querySelector('img.katex-svg');
+                if (svgImg && svgImg.getAttribute('alt')) {
+                    return formatMath(svgImg.getAttribute('alt'), node);
+                }
+
+                if (content.trim()) {
+                    return formatMath(content, node);
+                }
+
+                return node.textContent;
+            }
+        });
+
+        function formatMath(latex, node) {
+            const isDisplay = node.classList.contains('katex-display') || 
+                             node.classList.contains('math-display') ||
+                             node.parentElement?.classList.contains('math-display') ||
+                             node.getAttribute('display') === 'block';
+            
+            const cleanLatex = latex.trim();
+            if (!cleanLatex) return '';
+
+            return isDisplay ? `\n\n$$ ${cleanLatex} $$\n\n` : `$${cleanLatex}$`;
+        }
+
         turndownService.addRule('fencedCodeBlock', {
             filter: function (node, options) {
                 return (
@@ -315,9 +376,9 @@
         return rawText
             .split('\n')
             .map(line => line.trim())
-            .filter((line, index, arr) =>
-                line !== '' || (arr[index - 1] !== '' && index > 0)
-            )
+            .filter((line, index, arr) => {
+                return line !== '' || (index > 0 && arr[index - 1] !== '');
+            })
             .join('\n')
             .trim();
     }
@@ -337,25 +398,23 @@
         if (display === 'none') return '';
 
         const tagName = node.tagName.toUpperCase();
+        
         if (tagName === 'BR') return '\n';
         if (['SCRIPT', 'STYLE'].includes(tagName)) return '';
 
-        const childrenText = Array.from(node.childNodes)
+        let childrenText = Array.from(node.childNodes)
             .map(child => getPerfectPlainText(child))
             .join('');
 
         if (display === 'table-cell' || tagName === 'TD' || tagName === 'TH') {
-            return childrenText.trim() + ' '; 
-        }
-
-        if (display === 'table-row' || tagName === 'TR') {
-            return '\n' + childrenText.trim() + '\n';
+            return childrenText.trim() + ' ';
         }
 
         const isBlock = !display.includes('inline') && display !== 'contents';
+        const isActuallyBlock = isBlock && !['SPAN', 'I', 'B', 'STRONG', 'EM', 'FONT', 'A'].includes(tagName);
 
-        if (isBlock) {
-            return `\n${childrenText}\n`;
+        if (isActuallyBlock) {
+            return `\n${childrenText.trim()}\n`;
         }
 
         return childrenText;

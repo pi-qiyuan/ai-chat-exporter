@@ -88,11 +88,10 @@
         if (ctx.type === 'user') {
             let div = ctx.userQueryElement;
             if (div) {
-                let child = div.querySelector(GeminiProvider.selectors.queryText);
-                if (child) {
-                    return child.textContent.trim();
-                }
-                return div.textContent.trim();
+                let content = [];
+                let childList = div.querySelectorAll(GeminiProvider.selectors.queryText);
+                childList.forEach (el => content.push(el.textContent.trim()));
+                return content.join('\n');
             }
             return "";
         } 
@@ -127,7 +126,15 @@
 
     function getMarkdownTargetInternal(ctx) {
         if (ctx.type === 'user') {
-            return ctx.userQueryElement.querySelector(GeminiProvider.selectors.queryText);
+            const childList = ctx.userQueryElement.querySelectorAll(GeminiProvider.selectors.queryText);
+            if (childList.length === 0) return null;
+            if (childList.length === 1) return childList[0];
+            
+            const container = document.createElement('div');
+            childList.forEach(el => {
+                container.appendChild(el.cloneNode(true));
+            });
+            return container;
         } 
 
         if (ctx.type === 'model') {
