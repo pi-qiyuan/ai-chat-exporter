@@ -121,9 +121,7 @@
                 imgFolder.file(imgName, response.data, { base64: true });
                 return `<img src="./images/${imgName}" style="max-width: 100%; height: auto; display: block; margin: 10px 0;">\n`;
             }
-        } catch (e) {
-            console.error("Image download failed:", imgSrc, e);
-        }
+        } catch (e) { }
         return "";
     }
 

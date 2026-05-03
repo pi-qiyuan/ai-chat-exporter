@@ -5,7 +5,7 @@
             user: '[data-testid="user-message"]',
             model: '.font-claude-response',
             chatTitle: '[data-testid="chat-title-button"]',
-            extendedThinking: 'button[aria-label="Toggle menu"]',
+            extendedThinking: 'button[data-testid="model-selector-dropdown"]',
             markdownContent: '.standard-markdown',
             codeLangLabel: '.text-text-500'
         },
