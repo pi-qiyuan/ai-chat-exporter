@@ -4,8 +4,8 @@
         selectors: {
             user: 'user-query',
             model: 'message-content',
-            chatTitle: '.conversation.selected',
-            toolbox: 'toolbox-drawer',
+            chatTitle: '.mdc-list-item--activated',
+            toolbox: '.input-area-container',
             queryText: '.query-text-line',
             modelResponse: 'div[id^="model-response-message-content"]',
             tableFooter: '.table-footer.hide-from-message-actions',
@@ -26,13 +26,18 @@
             return false;
         }
 
-        if (targetElement.parentNode) {
-            targetElement.parentNode.insertBefore(buttons.moreButton, targetElement.nextSibling);
-            targetElement.parentNode.insertBefore(buttons.exportButton, targetElement.nextSibling);
-            targetElement.parentNode.insertBefore(buttons.selectButton, targetElement.nextSibling);
-
+        if (targetElement.querySelector('div.ace-chatgpt-container') !== null) {
             return true;
         }
+
+        var div = document.createElement('div');
+        div.className = 'ace-chatgpt-container';
+        targetElement.append(div);
+
+        div.appendChild(buttons.selectButton);
+        div.appendChild(buttons.exportButton);
+        div.appendChild(buttons.moreButton);
+        return true;
 
         return false;
     }

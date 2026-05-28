@@ -287,6 +287,43 @@ form[class*="group/composer"] div[class*="corner-"] {
     padding: 8px;
 }
 
+.ace-google-ai-overview-export {
+    margin-left: 10px;
+    vertical-align: middle;
+}
+
+.ace-google-ai-overview-export .ace-button-group {
+    box-shadow: none;
+}
+
+.ace-google-ai-overview-export .ace-dropdown-menu {
+    top: calc(100% + 5px);
+    bottom: auto;
+    left: 0;
+    right: auto;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+.ace-google-ai-overview-main-btn {
+    border-top-left-radius: 18px !important;
+    border-bottom-left-radius: 18px !important;
+    padding: 5px 12px !important;
+    font-size: 13px !important;
+    line-height: 18px !important;
+}
+
+.ace-google-ai-overview-export .ace-dropdown-toggle {
+    border-top-right-radius: 18px;
+    border-bottom-right-radius: 18px;
+    padding: 5px 9px;
+}
+
+.ace-google-coffee-item {
+    border-top: 1px solid #e5e7eb;
+    margin-top: 4px;
+    padding-top: 8px !important;
+}
+
 /* Modal Styles */
 .ace-modal-overlay {
     position: fixed;
@@ -380,4 +417,16 @@ form[class*="group/composer"] div[class*="corner-"] {
 
 .ace-modal-btn-primary:hover {
     background-color: #2563eb;
+}
+
+.google-ai-container {
+    position: relative !important;
+    z-index: 9999 !important;
+    pointer-events: auto !important;
+    display: flex !important;
+    align-items: center !important;
+    margin-top: -20px !important;
+    clear: both !important;
+    width: 100% !important;
+    background-color: white;
 }

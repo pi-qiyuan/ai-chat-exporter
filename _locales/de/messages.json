@@ -1,8 +1,14 @@
-{
+﻿{
   "extensionName": { "message": "AI Chat Exporter" },
   "extensionDescription": { "message": "Eine leichtgewichtige Browser-Erweiterung zum Exportieren von AI-Konversationen in Markdown oder Text." },
   "selectBtn": { "message": "Nachrichten auswählen" },
   "exportBtn": { "message": "Auswahl exportieren" },
+  "googleAiOverviewExportBtn": { "message": "Exportieren" },
+  "googleAiOverviewExportBtnTitle": { "message": "KI-Überblick exportieren" },
+  "aiOverview": { "message": "Übersicht mit KI" },
+  "googleAiOverviewName": { "message": "Google KI-Überblick" },
+  "googleAiModeName": { "message": "Google AI KI‑Modus" },
+  "share": { "message": "Teilen" },
   "exportAsText": { "message": "Als TXT exportieren" },
   "exportAsMarkdown": { "message": "Als Markdown exportieren" },
   "noSelection": { "message": "Bitte wählen Sie Nachrichten zum Exportieren aus" },

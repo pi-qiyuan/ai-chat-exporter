@@ -11,6 +11,9 @@
             section.style.marginBottom = '30px';
 
             if (ctx.type === 'user') {
+                if (provider.getTextContent(ctx) == "") {
+                    return true;
+                }
                 appendScreenshotHeader(section, Utils.getHeaderTitle('user'));
                 appendScreenshotContent(section, ctx, provider);
             } else if (ctx.type === 'model') {

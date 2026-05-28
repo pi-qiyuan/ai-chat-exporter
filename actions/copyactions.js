@@ -8,6 +8,16 @@
     function handleExport(format) {
         const selectedCheckboxes = document.querySelectorAll('.ace-model-selector:checked');
         if (selectedCheckboxes.length === 0) {
+            const provider = AppState.currentProvider;
+            const defaultContexts = provider && provider.getDefaultExportContexts
+                ? provider.getDefaultExportContexts()
+                : [];
+
+            if (defaultContexts.length > 0) {
+                handleExportWithContexts(format, defaultContexts);
+                return;
+            }
+
             Utils.showToast(chrome.i18n.getMessage("noSelection"));
             AppState.inSelectMode = true;
             CheckActions.manageUserQueryCheckboxes();
@@ -25,6 +35,20 @@
             exportAsImage(selectedCheckboxes);
         } else {
             exportAsText(selectedCheckboxes);
+        }
+    }
+
+    function handleExportWithContexts(format, contexts) {
+        if (format === 'md') {
+            exportAsMarkdown(contexts);
+        } else if (format === 'clipboard') {
+            exportToClipboard(contexts);
+        } else if (format === 'offline') {
+            exportOfflineWebpage(contexts);
+        } else if (format === 'screenshot') {
+            exportAsImage(contexts);
+        } else {
+            exportAsText(contexts);
         }
     }
 
@@ -104,7 +128,7 @@
         );
     }
 
-    async function runExportSequence(selectedCheckboxes, itemProcessor, postProcessor) {
+    async function runExportSequence(selectedItems, itemProcessor, postProcessor) {
         const chatIdsToSave = {};
         const provider = AppState.currentProvider;
         if (!provider) return;
@@ -112,8 +136,10 @@
         let hasContent = false;
 
         try {
-            for (const checkbox of selectedCheckboxes) {
-                const context = getExportContext(checkbox, provider);
+            for (const selectedItem of selectedItems) {
+                const context = selectedItem && selectedItem.messageContentWrapper
+                    ? selectedItem
+                    : getExportContext(selectedItem, provider);
                 if (!context) continue;
 
                 const result = await itemProcessor(context);
@@ -134,11 +160,15 @@
 
             if (hasContent && Object.keys(chatIdsToSave).length > 0) {
                 await StorageManager.saveChatIds(chatIdsToSave);
-                updateExportStatus(selectedCheckboxes);
+                updateExportStatus(selectedItems);
             }
 
             if (hasContent) {
-                selectedCheckboxes.forEach(cb => cb.checked = false);
+                selectedItems.forEach(item => {
+                    if (item && typeof item.checked === 'boolean') {
+                        item.checked = false;
+                    }
+                });
             }
         } catch (error) {
             Utils.showToast("Export failed: " + error.message);
@@ -186,6 +216,8 @@
     function updateExportStatus(selectedCheckboxes) {
         const exportedText = chrome.i18n.getMessage("exportedTag");
         for (const checkbox of selectedCheckboxes) {
+            if (!checkbox || !checkbox.closest) continue;
+
             const labelTag = checkbox.closest('.ace-model-label-tag');
             if (labelTag) {
                 const statusSpan = labelTag.querySelector('.ace-exported-status');

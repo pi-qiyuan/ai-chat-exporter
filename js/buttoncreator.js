@@ -148,9 +148,10 @@
         setupDropdown(toggleBtn, menu);
 
         menu.addEventListener('click', (event) => {
-            const target = event.target;
-            if (target.classList.contains('ace-menu-item')) {
+            const target = event.target.closest('.ace-menu-item');
+            if (target) {
                 const format = target.getAttribute('data-format');
+                if (!format) return;
                 
                 CopyActions.handleExport(format);
                 if (format === 'clipboard') {

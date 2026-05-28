@@ -33,8 +33,14 @@ Whether you are a developer building a knowledge base, a student organizing stud
 - Capture Screenshot: [html2canvas](https://html2canvas.hertzen.com/) (MIT License) — used for export shareable image.
 
 ### Changelog
-🎉 NEW IN v2.3.0: IMAGE ARCHIVE & SHAREABLE LONG IMAGES
------------------------------------
+#### 🎉 NEW IN v2.4.0: GOOGLE AI OVERVIEW & GOOGLE AI MODE SUPPORT
+Bridge the gap between searching and knowledge management! Now you can easily save AI-enhanced results from Google Search:
+
+  - ✨ **EXPORT GOOGLE AI OVERVIEW & GOOGLE AI MODE**: Extract and export AI-generated summaries or deep conversations from Google Search pages. Save complex summaries or quick answers as Markdown or use Smart Copy to organize them in your notes.
+
+  - ✨ **SEAMLESS CROSS-PLATFORM EXPERIENCE**: A unified export workflow that makes moving from discovery to archiving faster and more efficient.
+
+#### v2.3.0: IMAGE ARCHIVE & SHAREABLE LONG IMAGES
 Save more than just text! Our latest update focuses on visual preservation:
   - ✨ **EXPORT IMAGE ARCHIVE**: The best way to save AI-generated images. Downloads selected content into a complete offline package, ensuring your visuals are preserved forever.
   - ✨ **SHAREABLE LONG IMAGES**: Generate a high-quality long image of your conversation, perfectly formatted for sharing on social media or with colleagues.

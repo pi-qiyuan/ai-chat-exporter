@@ -16,10 +16,15 @@
     function manageCheckboxes(type) {
         if (!AppState.currentProvider) return;
 
-        const selector = AppState.currentProvider.selectors[type];
-        if (!selector) return;
+        let elements = [];
 
-        const elements = document.querySelectorAll(selector);
+        if (AppState.currentProvider.getSelectors) {
+            elements = AppState.currentProvider.getSelectors(type);
+        } else {
+            const selector = AppState.currentProvider.selectors[type];
+            if (!selector) return;
+            elements = document.querySelectorAll(selector);
+        }
 
         elements.forEach(item => {
             if (hasCheckbox(item, type)) {
@@ -34,8 +39,8 @@
 
     function hasCheckbox(item, type) {
         return type === 'user' 
-            ? (item.previousElementSibling && item.previousElementSibling.classList.contains('ace-model-label-tag'))
-            : item.querySelector('.ace-model-label-tag');
+            ? (item.previousElementSibling && item.previousElementSibling.classList.contains('ace-model-label-tag') && item.previousElementSibling.textContent.trim() != "")
+            : (item.querySelector('.ace-model-label-tag') && item.querySelector('.ace-model-label-tag').textContent.trim() != "");
     }
 
     function createCheckboxLabel(type) {
