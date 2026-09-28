@@ -17,6 +17,7 @@
   "selectAll": { "message": "选择所有对话" },
   "selectUser": { "message": "选择全部提问" },
   "selectModel": { "message": "选择全部回答" },
+  "cancelSelect": { "message": "取消选择" },
   "moreBtn": { "message": "更多" },
   "moreTools": { "message": "更多工具" },
   "privacyPolicy": { "message": "隐私声明" },

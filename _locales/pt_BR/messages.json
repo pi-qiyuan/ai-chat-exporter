@@ -17,6 +17,7 @@
   "selectAll": { "message": "Selecionar Todas as Conversas" },
   "selectUser": { "message": "Selecionar Todos os Prompts" },
   "selectModel": { "message": "Selecionar Todas as Respostas" },
+  "cancelSelect": { "message": "Cancelar seleção" },
   "moreBtn": { "message": "Mais" },
   "moreTools": { "message": "Mais Ferramentas" },
   "privacyPolicy": { "message": "Política de Privacidade" },

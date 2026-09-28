@@ -2,10 +2,54 @@
     const ButtonCreator = {
         insertExportButton: (observer) => {
             insertExportButton(observer);
-        }
+        },
+        insertButton: (observer) => {
+            insertExportButton(observer);
+        },
+        createSelectButton,
+        createExportButton,
+        createMoreButton,
+        createSelectMenu,
+        createExportMenu,
+        createMoreMenu,
+        setupDropdown,
+        initExportMenu
     };
 
+    function removeMenusFromBody() {
+        document.getElementById('select-menu')?.remove();
+        document.getElementById('export-menu')?.remove();
+        document.getElementById('more-menu')?.remove();
+    }
+
+    function attachMenusToBody() {
+        if (!document.body) return;
+
+        removeMenusFromBody();
+
+        const selectMenu = createSelectMenu();
+        const exportMenu = createExportMenu();
+        const moreMenu = createMoreMenu();
+
+        if (window.location.hostname === 'www.google.com') {
+            const moreToolsItem = document.createElement('li');
+            moreToolsItem.className = 'ace-google-more-tools-item';
+            moreToolsItem.innerHTML = `
+                <a href="https://hugbear.ai" target="_blank" class="ace-menu-link ace-google-more-tools-link">
+                    🚀 ${chrome.i18n.getMessage('moreTools')}
+                </a>
+            `;
+            exportMenu.appendChild(moreToolsItem);
+        }
+
+        document.body.appendChild(selectMenu);
+        document.body.appendChild(exportMenu);
+        document.body.appendChild(moreMenu);
+    }
+
     function insertExportButton(observer) {
+        if (!document.body) return;
+
         if (document.getElementById('main-export-btn')) {
             if (observer) observer.disconnect();
             return;
@@ -19,6 +63,7 @@
 
         if (AppState.currentProvider && AppState.currentProvider.insertButtons(buttons)) {
             if (observer) observer.disconnect();
+            attachMenusToBody();
             initExportModule();
             initSelectModule();
             initMoreModule();
@@ -36,14 +81,22 @@
                 <button id="select-menu-toggle-btn" class="ace-dropdown-toggle">
                     <span class="ace-arrow">▼</span>
                 </button>
-                <ul id="select-menu" class="ace-dropdown-menu">
-                    <li class="ace-menu-item" data-action="all">${chrome.i18n.getMessage('selectAll')}</li>
-                    <li class="ace-menu-item" data-action="user">${chrome.i18n.getMessage('selectUser')}</li>
-                    <li class="ace-menu-item" data-action="model">${chrome.i18n.getMessage('selectModel')}</li>
-                </ul>
             </div>
         `;
         return selectButton;
+    }
+
+    function createSelectMenu() {
+        const selectMenu = document.createElement('ul');
+        selectMenu.id = 'select-menu';
+        selectMenu.className = 'ace-dropdown-menu';
+        selectMenu.innerHTML = `
+            <li class="ace-menu-item" data-action="all">${chrome.i18n.getMessage('selectAll')}</li>
+            <li class="ace-menu-item" data-action="user">${chrome.i18n.getMessage('selectUser')}</li>
+            <li class="ace-menu-item" data-action="model">${chrome.i18n.getMessage('selectModel')}</li>
+            <li class="ace-menu-item" data-action="cancel">${chrome.i18n.getMessage('cancelSelect')}</li>
+        `;
+        return selectMenu;
     }
 
     function createExportButton() {
@@ -61,17 +114,23 @@
                 <button id="menu-toggle-btn" class="ace-dropdown-toggle">
                     <span class="ace-arrow">▼</span>
                 </button>
-
-                <ul id="export-menu" class="ace-dropdown-menu">
-                    <li class="ace-menu-item" data-format="txt">${chrome.i18n.getMessage('exportAsText')}</li>
-                    <li class="ace-menu-item" data-format="md">${chrome.i18n.getMessage('exportAsMarkdown')}</li>
-                    <li class="ace-menu-item" data-format="clipboard">${chrome.i18n.getMessage('smartCopy')}</li>
-                    <li class="ace-menu-item" data-format="offline">${chrome.i18n.getMessage('exportOffline')}</li>
-                    <li class="ace-menu-item" data-format="screenshot">${chrome.i18n.getMessage('exportScreenshot')}</li>
-                </ul>
             </div>
         `;
         return exportButton;
+    }
+
+    function createExportMenu() {
+        const exportMenu = document.createElement('ul');
+        exportMenu.id = 'export-menu';
+        exportMenu.className = 'ace-dropdown-menu';
+        exportMenu.innerHTML = `
+            <li class="ace-menu-item" data-format="txt">${chrome.i18n.getMessage('exportAsText')}</li>
+            <li class="ace-menu-item" data-format="md">${chrome.i18n.getMessage('exportAsMarkdown')}</li>
+            <li class="ace-menu-item" data-format="clipboard">${chrome.i18n.getMessage('smartCopy')}</li>
+            <li class="ace-menu-item" data-format="offline">${chrome.i18n.getMessage('exportOffline')}</li>
+            <li class="ace-menu-item" data-format="screenshot">${chrome.i18n.getMessage('exportScreenshot')}</li>
+        `;
+        return exportMenu;
     }
 
     function createMoreButton() {
@@ -83,26 +142,63 @@
                     ${chrome.i18n.getMessage('moreBtn')}
                     <span class="ace-arrow ace-margin-left-arrow">▼</span>
                 </button>
-                <ul id="more-menu" class="ace-dropdown-menu">
-                    <li class="ace-menu-item" id="clear-history-btn">
-                         <span class="ace-menu-link" style="cursor: pointer;">
-                            ${chrome.i18n.getMessage('clearHistory')}
-                        </span>
-                    </li>
-                    <li class="ace-menu-item">
-                        <a href="https://hugbear.ai" target="_blank" class="ace-menu-link">
-                            🚀 ${chrome.i18n.getMessage('moreTools')}
-                        </a>
-                    </li>
-                    <li class="ace-menu-item">
-                        <a href="https://ko-fi.com/qiyuanyang" target="_blank" class="ace-menu-link">
-                            ❤️ ${chrome.i18n.getMessage('sponsor')}
-                        </a>
-                    </li>
-                </ul>
             </div>
         `;
         return moreButton;
+    }
+
+    function createMoreMenu() {
+        const moreMenu = document.createElement('ul');
+        moreMenu.id = 'more-menu';
+        moreMenu.className = 'ace-dropdown-menu';
+        moreMenu.innerHTML = '';
+
+        const showClearHistoryMenu = AppState.currentProvider.showClearHistoryMenu ?? true;
+        if (showClearHistoryMenu) {
+            moreMenu.innerHTML += `
+                <li class="ace-menu-item" id="clear-history-btn">
+                    <span class="ace-menu-link" style="cursor: pointer;">
+                        ${chrome.i18n.getMessage('clearHistory')}
+                    </span>
+                </li>
+            `;
+        }
+        moreMenu.innerHTML += `
+            <li class="ace-menu-item">
+                <a href="https://hugbear.ai" target="_blank" class="ace-menu-link">
+                    🚀 ${chrome.i18n.getMessage('moreTools')}
+                </a>
+            </li>
+            <li class="ace-menu-item">
+                <a href="https://ko-fi.com/qiyuanyang" target="_blank" class="ace-menu-link">
+                    ❤️ ${chrome.i18n.getMessage('sponsor')}
+                </a>
+            </li>
+        `;
+        return moreMenu;
+    }
+
+    function updateMenuPosition(toggleBtn, menu) {
+        if (!toggleBtn || !menu) return;
+        const buttonGroup = toggleBtn.closest('.ace-button-group') || toggleBtn;
+        const rect = buttonGroup.getBoundingClientRect();
+
+        const isGoogleOverview = !!buttonGroup.closest('.ace-google-ai-overview-export, .ace-google-ai-overview-export-foot');
+        if (isGoogleOverview) {
+            menu.style.top = `${rect.bottom + 5}px`;
+            menu.style.bottom = 'auto';
+            menu.style.left = `${rect.left}px`;
+            menu.style.right = 'auto';
+            menu.style.boxShadow = '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)';
+        } else {
+            const bottom = window.innerHeight - rect.top + 5;
+            const right = Math.max(0, window.innerWidth - rect.right);
+            menu.style.bottom = `${bottom}px`;
+            menu.style.top = 'auto';
+            menu.style.right = `${right}px`;
+            menu.style.left = 'auto';
+            menu.style.boxShadow = '';
+        }
     }
 
     function setupDropdown(toggleBtn, menu) {
@@ -114,7 +210,8 @@
             const allDropdowns = [
                 { menuId: 'export-menu', toggleId: 'menu-toggle-btn' },
                 { menuId: 'select-menu', toggleId: 'select-menu-toggle-btn' },
-                { menuId: 'more-menu', toggleId: 'more-menu-btn' }
+                { menuId: 'more-menu', toggleId: 'more-menu-btn' },
+                { menuId: 'footer-export-menu', toggleId: 'footer-export-btn' }
             ];
 
             allDropdowns.forEach(({ menuId, toggleId }) => {
@@ -129,8 +226,15 @@
                 }
             });
 
-            const isShowing = menu.classList.toggle('ace-show');
-            toggleBtn.classList.toggle('ace-show-arrow', isShowing);
+            const willShow = !menu.classList.contains('ace-show');
+            if (willShow) {
+                updateMenuPosition(toggleBtn, menu);
+                menu.classList.add('ace-show');
+                toggleBtn.classList.add('ace-show-arrow');
+            } else {
+                menu.classList.remove('ace-show');
+                toggleBtn.classList.remove('ace-show-arrow');
+            }
         });
     }
 
@@ -146,6 +250,12 @@
         });
 
         setupDropdown(toggleBtn, menu);
+
+        initExportMenu(menu, toggleBtn);
+    }
+
+    function initExportMenu(menu, toggleBtn) {
+        if (!menu || !toggleBtn) return;
 
         menu.addEventListener('click', (event) => {
             const target = event.target.closest('.ace-menu-item');
@@ -225,6 +335,13 @@
 
         setupDropdown(moreBtn, menu);
 
+        menu.addEventListener('click', (event) => {
+            if (event.target.closest('a')) {
+                menu.classList.remove('ace-show');
+                moreBtn.classList.remove('ace-show-arrow');
+            }
+        });
+
         if (clearHistoryBtn) {
             clearHistoryBtn.addEventListener('click', async () => {
                 await StorageManager.removeChatIds();
@@ -241,11 +358,32 @@
         }
     }
 
+    function closeAllDropdowns() {
+        const dropdowns = [
+            { menuId: 'export-menu', toggleId: 'menu-toggle-btn' },
+            { menuId: 'select-menu', toggleId: 'select-menu-toggle-btn' },
+            { menuId: 'more-menu', toggleId: 'more-menu-btn' },
+            { menuId: 'footer-export-menu', toggleId: 'footer-export-btn' }
+        ];
+
+        dropdowns.forEach(({ menuId, toggleId }) => {
+            const menu = document.getElementById(menuId);
+            const toggleBtn = document.getElementById(toggleId);
+            if (menu && menu.classList.contains('ace-show')) {
+                menu.classList.remove('ace-show');
+                if (toggleBtn) {
+                    toggleBtn.classList.remove('ace-show-arrow');
+                }
+            }
+        });
+    }
+
     window.addEventListener('click', (event) => {
         const dropdowns = [
             { menuId: 'export-menu', toggleId: 'menu-toggle-btn' },
             { menuId: 'select-menu', toggleId: 'select-menu-toggle-btn' },
-            { menuId: 'more-menu', toggleId: 'more-menu-btn' }
+            { menuId: 'more-menu', toggleId: 'more-menu-btn' },
+            { menuId: 'footer-export-menu', toggleId: 'footer-export-btn' }
         ];
 
         dropdowns.forEach(({ menuId, toggleId }) => {
@@ -259,6 +397,31 @@
             }
         });
     });
+
+    window.addEventListener('scroll', (event) => {
+        const dropdowns = [
+            { menuId: 'export-menu', toggleId: 'menu-toggle-btn' },
+            { menuId: 'select-menu', toggleId: 'select-menu-toggle-btn' },
+            { menuId: 'more-menu', toggleId: 'more-menu-btn' },
+            { menuId: 'footer-export-menu', toggleId: 'footer-export-btn' }
+        ];
+
+        dropdowns.forEach(({ menuId, toggleId }) => {
+            const menu = document.getElementById(menuId);
+            const toggleBtn = document.getElementById(toggleId);
+            if (menu && menu.classList.contains('ace-show')) {
+                if (event.target && menu.contains(event.target)) return;
+                menu.classList.remove('ace-show');
+                if (toggleBtn) {
+                    toggleBtn.classList.remove('ace-show-arrow');
+                }
+            }
+        });
+    }, { passive: true, capture: true });
+
+    window.addEventListener('resize', () => {
+        closeAllDropdowns();
+    }, { passive: true });
 
     global.ButtonCreator = ButtonCreator;
 })(window);

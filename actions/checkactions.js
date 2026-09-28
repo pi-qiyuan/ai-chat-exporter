@@ -1,11 +1,15 @@
 (function(global){
     const CheckActions = {
         manageUserQueryCheckboxes: () => {
+            if (AppState.currentProvider === global.GoogleAIProvider) return;
             manageCheckboxes('user');
         },
 
         manageContainerCheckboxes: () => {
             manageCheckboxes('model');
+            if (AppState.currentProvider === global.GoogleAIProvider) {
+                manageGoogleAIUserCheckboxes();
+            }
         },
 
         toggleSelection: (action) => {
@@ -27,14 +31,40 @@
         }
 
         elements.forEach(item => {
-            if (hasCheckbox(item, type)) {
-                return;
-            }
-
-            const label = createCheckboxLabel(type);
-            insertCheckbox(item, label, type);
-            checkExportStatus(item, label, type);
+            addCheckboxIfMissing(item, type);
         });
+    }
+
+    function manageGoogleAIUserCheckboxes() {
+        const modelElements = AppState.currentProvider.getSelectors('model');
+        const userElements = new Set();
+
+        modelElements.forEach(modelItem => {
+            const userContainer = modelItem.parentElement && modelItem.parentElement.firstElementChild;
+            let userItem = userContainer && userContainer.firstElementChild;
+            if (userItem && userItem.classList.contains('ace-checkbox-user')) {
+                userItem = userItem.nextElementSibling;
+            }
+            userItem = userItem && userItem.firstElementChild;
+            if (userItem && userItem.classList.contains('ace-checkbox-user')) {
+                userItem = userItem.nextElementSibling;
+            }
+            if (userItem) userElements.add(userItem);
+        });
+
+        userElements.forEach(userItem => addCheckboxIfMissing(userItem, 'user'));
+    }
+
+    function addCheckboxIfMissing(item, type) {
+        if (hasCheckbox(item, type)) return;
+
+        const label = createCheckboxLabel(type);
+        insertCheckbox(item, label, type);
+        const checkbox = label.querySelector('.ace-model-selector');
+        if (AppState.currentProvider.restoreCheckboxState) {
+            AppState.currentProvider.restoreCheckboxState(item, type, checkbox);
+        }
+        checkExportStatus(item, label, type);
     }
 
     function hasCheckbox(item, type) {
@@ -85,10 +115,17 @@
     }
 
     function toggleSelectionInternal(action) {
+        const provider = AppState.currentProvider;
+        if (provider && provider.setSelectionMode && provider.setSelectionMode(action)) {
+            return;
+        }
+
         const allCheckboxes = document.querySelectorAll('.ace-model-selector');
 
         if (action === 'all') {
             allCheckboxes.forEach(c => c.checked = true);
+        } else if (action === 'cancel') {
+            allCheckboxes.forEach(c => c.checked = false);
         } else {
             allCheckboxes.forEach(c => c.checked = false);
 

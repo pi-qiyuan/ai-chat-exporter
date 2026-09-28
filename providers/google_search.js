@@ -13,7 +13,8 @@
         getFilename: () => getFilenameInternal(),
         getTextContent: (context) => getTextContentInternal(context),
         getMarkdownTarget: (context) => getMarkdownTargetInternal(context),
-        getDefaultExportContexts: () => getDefaultExportContextsInternal()
+        getDefaultExportContexts: () => getDefaultExportContextsInternal(),
+        showClearHistoryMenu: false
     };
 
     function isActiveInternal() {
@@ -26,7 +27,7 @@
             return !!heading;
         }
 
-        const exportButton = buttons.exportButton;
+        const exportButton = buttons.exportButton.cloneNode(true);
         exportButton.classList.add('ace-google-ai-overview-export');
 
         const mainButton = exportButton.querySelector('#main-export-btn');
@@ -35,20 +36,27 @@
             mainButton.title = chrome.i18n.getMessage('googleAiOverviewExportBtnTitle') || '导出 AI 概览';
             mainButton.classList.add('ace-google-ai-overview-main-btn');
         }
-
-        const menu = exportButton.querySelector('#export-menu');
-        if (menu && !menu.querySelector('.ace-google-more-tools-link')) {
-            const moreToolsItem = document.createElement('li');
-            moreToolsItem.className = 'ace-google-more-tools-item';
-            moreToolsItem.innerHTML = `
-                <a href="https://hugbear.ai" target="_blank" class="ace-menu-link ace-google-more-tools-link">
-                    🚀 ${chrome.i18n.getMessage('moreTools')}
-                </a>
-            `;
-            menu.appendChild(moreToolsItem);
-        }
-
         heading.insertAdjacentElement('afterend', exportButton);
+
+        const root = findAiOverviewRoot();
+
+        const footerButtonContainer = document.createElement('div');
+        footerButtonContainer.classList.add('ace-google-ai-overview-export-foot');
+        root.insertAdjacentElement('beforeend', footerButtonContainer);
+
+        const footExportButton = buttons.exportButton;
+        footExportButton.id = 'footer-export-btn';
+        footerButtonContainer.appendChild(footExportButton);
+
+        const moreButton = buttons.moreButton;
+        footerButtonContainer.appendChild(moreButton);
+
+        const footExportMenu = ButtonCreator.createExportMenu();
+        footExportMenu.id = 'footer-export-menu';
+        document.body.appendChild(footExportMenu);
+        ButtonCreator.setupDropdown(footExportButton, footExportMenu);
+        ButtonCreator.initExportMenu(footExportMenu, footExportButton);
+
         return true;
     }
 
@@ -57,6 +65,7 @@
         if (!content) return [];
 
         return [{
+            __aceExportContext: true,
             type: 'model',
             labelTag: null,
             checkbox: null,
@@ -82,7 +91,6 @@
 
     function getFilenameInternal() {
         const query = new URLSearchParams(window.location.search).get('q');
-        const aiOverviewTitle = chrome.i18n.getMessage('aiOverview') || "AI Overview";
         const providerName = chrome.i18n.getMessage('googleAiOverviewName') || "Google AI Overview";
         if (query) {
             return sanitizeFilename(`${providerName} - ${query}`);

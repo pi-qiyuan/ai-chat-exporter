@@ -63,15 +63,30 @@ if (targetNode) {
 }
 
 let lastUrl = location.href;
-new MutationObserver(() => {
+let checkboxSyncTimer = null;
+
+function scheduleCheckboxSync() {
+    if (checkboxSyncTimer) return;
+    checkboxSyncTimer = setTimeout(() => {
+        checkboxSyncTimer = null;
+        if (!AppState.inSelectMode) return;
+        CheckActions.manageUserQueryCheckboxes();
+        CheckActions.manageContainerCheckboxes();
+    }, 100);
+}
+
+new MutationObserver((mutationsList) => {
     const url = location.href;
     if (url !== lastUrl) {
         lastUrl = url;
         AppState.inSelectMode = false;
         AppState.currentProvider = null;
-        document.querySelectorAll('.ace-custom-checkbox-container').forEach(container => container.remove());
+        document.querySelectorAll('.ace-model-label-tag').forEach(label => label.remove());
 
         updateCurrentProvider();
+        if (AppState.currentProvider && AppState.currentProvider.hasActiveSelection) {
+            AppState.inSelectMode = AppState.currentProvider.hasActiveSelection();
+        }
         const observer = new MutationObserver((_mutationsList, obs) => {
             updateCurrentProvider();
             ButtonCreator.insertExportButton(obs);
@@ -79,13 +94,16 @@ new MutationObserver(() => {
         observer.observe(targetNode, config);
     }
 
+    if (AppState.currentProvider && AppState.currentProvider.handleMutations) {
+        AppState.currentProvider.handleMutations(mutationsList);
+    }
+
     if (!AppState.inSelectMode) {
         return;
     }
 
-    CheckActions.manageUserQueryCheckboxes();
-    CheckActions.manageContainerCheckboxes();
-}).observe(document, {subtree: true, childList: true});
+    scheduleCheckboxSync();
+}).observe(document, {subtree: true, childList: true, characterData: true});
 
 document.addEventListener('keydown', (event) => {
     if (event.key.toUpperCase() === 'E' && event.shiftKey && (event.ctrlKey || event.metaKey)) {

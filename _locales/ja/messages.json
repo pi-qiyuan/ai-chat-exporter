@@ -17,6 +17,7 @@
   "selectAll": { "message": "すべての会話を選択" },
   "selectUser": { "message": "すべての質問を選択" },
   "selectModel": { "message": "すべての回答を選択" },
+  "cancelSelect": { "message": "選択を解除" },
   "moreBtn": { "message": "その他" },
   "moreTools": { "message": "その他のツール" },
   "privacyPolicy": { "message": "プライバシーポリシー" },

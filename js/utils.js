@@ -53,10 +53,15 @@
         },
 
         getProviderFilename: (selector, fallback) => {
+            if (document.title.trim() != '') {
+                return document.title;
+            }
+
             const element = document.querySelector(selector);
             if (element && element.textContent.trim()) {
                 return element.textContent.trim();
             }
+
             return fallback;
         },
 

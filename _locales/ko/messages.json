@@ -17,6 +17,7 @@
   "selectAll": { "message": "모든 대화 선택" },
   "selectUser": { "message": "모든 질문 선택" },
   "selectModel": { "message": "모든 답변 선택" },
+  "cancelSelect": { "message": "선택 취소" },
   "moreBtn": { "message": "더보기" },
   "moreTools": { "message": "더 많은 도구" },
   "privacyPolicy": { "message": "개인정보 처리방침" },

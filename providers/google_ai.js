@@ -59,27 +59,6 @@
         return true;
     }
 
-    function createSelectButton() {
-        const selectButton = document.createElement('div');
-        selectButton.className = 'ace-export-button';
-        selectButton.innerHTML = `
-            <div class="ace-button-group">
-                <button id="select-action-btn" class="ace-my-button">
-                    ${chrome.i18n.getMessage('selectBtn')}
-                </button>
-                <button id="select-menu-toggle-btn" class="ace-dropdown-toggle">
-                    <span class="ace-arrow">▼</span>
-                </button>
-                <ul id="select-menu" class="ace-dropdown-menu">
-                    <li class="ace-menu-item" data-action="all">${chrome.i18n.getMessage('selectAll')}</li>
-                    <li class="ace-menu-item" data-action="user">${chrome.i18n.getMessage('selectUser')}</li>
-                    <li class="ace-menu-item" data-action="model">${chrome.i18n.getMessage('selectModel')}</li>
-                </ul>
-            </div>
-        `;
-        return selectButton;
-    }
-
     function generateChatIdInternal (item, type) {
         return null;
     }
@@ -139,6 +118,14 @@
                     span.remove();
                 }
             });
+
+            const walker = document.createTreeWalker(clone, NodeFilter.SHOW_TEXT);
+            const keywords = ['You said:', '您说：', 'Du hast Folgendes gesagt:', 'Has dicho:', 'Vous avez dit', 'あなたが話した内容:', '다음과 같이 말했습니다.', 'Você disse:'];
+            let node;
+            while (node = walker.nextNode()) {
+                node.nodeValue = node.nodeValue.replace(new RegExp(keywords.join('|'), 'g'), '');
+            }
+
             if (clone.textContent.trim() == '') {
                 return null;
             }

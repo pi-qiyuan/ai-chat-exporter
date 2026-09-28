@@ -17,6 +17,7 @@
   "selectAll": { "message": "Alle Gespräche auswählen" },
   "selectUser": { "message": "Alle Fragen auswählen" },
   "selectModel": { "message": "Alle Antworten auswählen" },
+  "cancelSelect": { "message": "Auswahl abbrechen" },
   "moreBtn": { "message": "Mehr" },
   "moreTools": { "message": "Weitere Tools" },
   "privacyPolicy": { "message": "Datenschutzerklärung" },

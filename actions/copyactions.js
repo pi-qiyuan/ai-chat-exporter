@@ -5,10 +5,17 @@
         }
     };
 
-    function handleExport(format) {
-        const selectedCheckboxes = document.querySelectorAll('.ace-model-selector:checked');
-        if (selectedCheckboxes.length === 0) {
-            const provider = AppState.currentProvider;
+    async function handleExport(format) {
+        const provider = AppState.currentProvider;
+        if (provider && provider.flushPendingSnapshots) {
+            provider.flushPendingSnapshots();
+        }
+        if (provider && provider.name !== 'ChatGPT' && provider.prepareFullExport) {
+            const isReady = await provider.prepareFullExport();
+            if (!isReady) return;
+        }
+        const selectedItems = getSelectedExportItems(provider);
+        if (selectedItems.length === 0) {
             const defaultContexts = provider && provider.getDefaultExportContexts
                 ? provider.getDefaultExportContexts()
                 : [];
@@ -26,16 +33,65 @@
         }
 
         if (format === 'md') {
-            exportAsMarkdown(selectedCheckboxes);
+            exportAsMarkdown(selectedItems);
         } else if (format === 'clipboard') {
-            exportToClipboard(selectedCheckboxes);
+            exportToClipboard(selectedItems);
         } else if (format === 'offline') {
-            exportOfflineWebpage(selectedCheckboxes);
+            exportOfflineWebpage(selectedItems);
         } else if (format === 'screenshot') {
-            exportAsImage(selectedCheckboxes);
+            exportAsImage(selectedItems);
         } else {
-            exportAsText(selectedCheckboxes);
+            exportAsText(selectedItems);
         }
+    }
+
+    function getSelectedExportItems(provider) {
+        if (!provider) return [];
+
+        const itemsById = new Map();
+        const cachedContexts = provider && provider.getSelectedExportContexts
+            ? provider.getSelectedExportContexts()
+            : [];
+
+        // ChatGPT uses DOM-independent snapshots. Export only messages that were
+        // already captured in the cache; do not fall back to live DOM content.
+        if (provider.name === 'ChatGPT') {
+            for (const context of cachedContexts) {
+                if (context && context.chatId) itemsById.set(context.chatId, context);
+            }
+
+            for (const checkbox of document.querySelectorAll('.ace-model-selector:checked')) {
+                const context = getExportContext(checkbox, provider);
+                if (!context || !context.chatId) continue;
+                const cachedContext = itemsById.get(context.chatId);
+                if (cachedContext) {
+                    itemsById.set(context.chatId, { ...cachedContext, checkbox });
+                }
+            }
+
+            return Array.from(itemsById.values());
+        }
+
+        for (const context of cachedContexts) {
+            if (context && context.chatId) itemsById.set(context.chatId, context);
+        }
+
+        for (const checkbox of document.querySelectorAll('.ace-model-selector:checked')) {
+            const context = getExportContext(checkbox, provider);
+            if (!context) continue;
+            // Cached snapshots are DOM-independent and retain the reconstructed order.
+            const key = context.chatId || checkbox;
+            const cachedContext = itemsById.get(key);
+            if (cachedContext) {
+                // Keep the cached content, but attach the currently visible control only
+                // for this export's status update and checkbox reset.
+                itemsById.set(key, { ...cachedContext, checkbox });
+            } else {
+                itemsById.set(key, context);
+            }
+        }
+
+        return Array.from(itemsById.values());
     }
 
     function handleExportWithContexts(format, contexts) {
@@ -137,7 +193,7 @@
 
         try {
             for (const selectedItem of selectedItems) {
-                const context = selectedItem && selectedItem.messageContentWrapper
+                const context = selectedItem && selectedItem.__aceExportContext
                     ? selectedItem
                     : getExportContext(selectedItem, provider);
                 if (!context) continue;
@@ -164,9 +220,13 @@
             }
 
             if (hasContent) {
+                if (provider.clearSelectedExportContexts) {
+                    provider.clearSelectedExportContexts(selectedItems);
+                }
                 selectedItems.forEach(item => {
-                    if (item && typeof item.checked === 'boolean') {
-                        item.checked = false;
+                    const checkbox = item && item.__aceExportContext ? item.checkbox : item;
+                    if (checkbox && typeof checkbox.checked === 'boolean') {
+                        checkbox.checked = false;
                     }
                 });
             }
@@ -182,18 +242,28 @@
         let userQueryElement = null;
         let messageContentWrapper = null;
 
-        userQueryElement = labelTag.parentElement.querySelector(provider.selectors.user);
-        if (labelTag.classList.contains('ace-checkbox-user')) {
-             userQueryElement = labelTag.nextElementSibling;
-        } else {
-             messageContentWrapper = labelTag.parentElement; 
-        }
-
         let type = "";
-        if (userQueryElement) {
-            type = "user";
-        } else if (messageContentWrapper) {
-            type = "model";
+        if (provider.name === 'ChatGPT') {
+            if (labelTag.classList.contains('ace-checkbox-user')) {
+                type = 'user';
+                userQueryElement = labelTag.nextElementSibling;
+            } else {
+                type = 'model';
+                messageContentWrapper = labelTag.parentElement;
+            }
+        } else {
+            userQueryElement = labelTag.parentElement.querySelector(provider.selectors.user);
+            if (labelTag.classList.contains('ace-checkbox-user')) {
+                 userQueryElement = labelTag.nextElementSibling;
+            } else {
+                 messageContentWrapper = labelTag.parentElement;
+            }
+
+            if (userQueryElement) {
+                type = "user";
+            } else if (messageContentWrapper) {
+                type = "model";
+            }
         }
 
         let chatId = null;
@@ -204,6 +274,7 @@
         }
 
         return {
+            __aceExportContext: true,
             checkbox,
             labelTag,
             userQueryElement,
@@ -215,7 +286,8 @@
 
     function updateExportStatus(selectedCheckboxes) {
         const exportedText = chrome.i18n.getMessage("exportedTag");
-        for (const checkbox of selectedCheckboxes) {
+        for (const item of selectedCheckboxes) {
+            const checkbox = item && item.__aceExportContext ? item.checkbox : item;
             if (!checkbox || !checkbox.closest) continue;
 
             const labelTag = checkbox.closest('.ace-model-label-tag');

@@ -23,6 +23,7 @@
   "selectAll": { "message": "Select All Conversations" },
   "selectUser": { "message": "Select All Prompts" },
   "selectModel": { "message": "Select All Responses" },
+  "cancelSelect": { "message": "Cancel selection" },
   "moreBtn": { "message": "More" },
   "moreTools": { "message": "More Tools" },
   "privacyPolicy": { "message": "Privacy Policy" },
